@@ -1,11 +1,10 @@
-<!--Big thanks to mikeck1 for provoding this small game-->
 <!DOCTYPE html>
 <html lang="de">
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wavelength Spiel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Wellenrad - Das Spiel</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
     <style>
@@ -18,6 +17,7 @@
             margin: 0;
             background-color: #ffffff;
             background-image: linear-gradient(155deg, #a98affdd 0%, #c3cfe2 100%);
+            overflow: hidden;
         }
         
         .game-container {
@@ -26,13 +26,14 @@
             padding: 2rem;
             border-radius: 25px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.444);
-            width: 600px;
-            height: 630px;
+            width: 700px;
+            height: auto;
+            min-height: 730px;
         }
         
         .title {
             font-family: "Press Start 2P", cursive;
-            font-size: 48 px;
+            font-size: 48px;
             font-weight: 500;
             color: #1c49fe;
             text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
@@ -51,137 +52,163 @@
             border-radius: 3px;
         }
         
-        .how-to-play {
-            margin-top: 20px;
-            letter-spacing: 2px;
-            background-color: #232323f4;
-        }
-        
-        .subtitle {
-            font-size: 24px;
-            color: #2f3542;
-            margin-bottom: 30px;
+        .board-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto 30px;
         }
         
         .board {
             width: 400px;
-            height: 200px;
+            height: 400px;
             background-color: #e0e0e0;
-            border-radius: 200px 200px 0 0;
+            border-radius: 50%;
             position: relative;
             overflow: hidden;
             box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.1);
-            margin: 0 auto;
         }
         
         .target-area {
             width: 400px;
-            height: 200px;
-            border-radius: 200px 200px 0 0;
+            height: 400px;
+            border-radius: 50%;
             position: absolute;
             overflow: hidden;
+            transition: opacity 0.3s ease;
+        }
+        
+        .target-area.hidden-for-countdown {
+            opacity: 0;
         }
         
         .needle-container {
             position: absolute;
-            bottom: 0;
+            top: 50%;
             left: 50%;
-            width: 40px;
-            height: 180px;
-            transform: translateX(-50%);
+            width: 400px;
+            height: 400px;
+            transform: translate(-50%, -50%);
             cursor: pointer;
+            z-index: 15;
+        }
+        
+        .needle-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background-color: #303030;
+            border-radius: 50%;
+            border: 3px solid #fa3949;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            pointer-events: none;
         }
         
         .needle {
             position: absolute;
-            bottom: 0;
+            top: 50%;
             left: 50%;
             width: 4px;
-            height: 200px;
-            background-color: #fa3949;
+            height: 180px;
+            background: linear-gradient(to top, #fa3949, #ff6b6b);
             border: 2px solid #303030d2;
             border-radius: 2px 2px 0 0;
-            transform-origin: bottom center;
-            transition: transform 0.2s ease;
+            transform-origin: 50% 100%;
+            transform: translate(-50%, -100%) rotate(0deg);
             z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
         }
         
-        .clues-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-            height: 60px;
-            /* Adjust this value as needed */
+        .category-labels {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
         
-        .clue {
-            flex: 1;
-            font-size: 18px;
+        .category-label {
+            position: absolute;
+            font-size: 16px;
             font-weight: bold;
             color: #2f3542;
+            padding: 8px 12px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 120px;
             text-align: center;
+            z-index: 5;
+            transition: all 0.3s ease;
+            opacity: 0;
+            box-sizing: border-box;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100%;
-            padding: 0 10px;
+            min-height: 40px;
         }
         
-        .bidirectional-arrow {
-            width: 100px;
-            height: 2px;
-            background-color: #f334f3;
-            position: relative;
-            margin: 0 20px;
-            flex-shrink: 0;
+        .category-label.visible {
+            opacity: 1;
         }
         
-        .bidirectional-arrow::before,
-        .bidirectional-arrow::after {
-            content: "";
-            position: absolute;
+        .category-label.top {
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .category-label.right {
             top: 50%;
-            width: 10px;
-            height: 10px;
-            border-top: 2px solid #f334f3;
-            border-right: 2px solid #f334f3;
+            right: -25px;
+            left: auto;
+            transform: translateY(-50%);
         }
         
-        .bidirectional-arrow::before {
+        .category-label.bottom {
+            bottom: -25px;
+            left: 50%;
+            top: auto;
+            transform: translateX(-50%);
+        }
+        
+        .category-label.left {
+            top: 50%;
+            left: -25px;
+            transform: translateY(-50%);
+        }
+        
+        .countdown-overlay {
+            position: fixed;
+            top: 0;
             left: 0;
-            transform: translateY(-50%) rotate(-135deg);
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
         }
         
-        .bidirectional-arrow::after {
-            right: 0;
-            transform: translateY(-50%) rotate(45deg);
+        .countdown-number {
+            font-family: "Press Start 2P", cursive;
+            font-size: 120px;
+            color: #ffffff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            animation: pulse 1s ease-in-out;
         }
         
-        @media (max-width: 768px) {
-            .clues-container {
-                flex-direction: row;
-                height: auto;
-                align-items: center;
-                padding: 10px 0;
-            }
-            
-            .clue {
-                font-size: 14px;
-                margin: 0;
-                flex: 1;
-                text-align: center;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: auto;
-                min-height: 50px;
-            }
-            
-            .bidirectional-arrow {
-                width: 40px;
-                margin: 0 10px;
-            }
+        @keyframes pulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
         }
         
         .controls {
@@ -209,12 +236,41 @@
             background-color: #3742fa;
         }
         
-        #score,
+        button:disabled {
+            background-color: #a4b0be;
+            cursor: not-allowed;
+        }
+        
+        #score {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2f3542;
+        }
+        
         #totalScore {
             margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
             color: #2f3542;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .team-score {
+            background-color: #f5f5f5;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .team-score.current-team {
+            background-color: #3742fa;
+            color: white;
+            border-color: #3742fa;
+            box-shadow: 0 3px 10px rgba(55, 66, 250, 0.3);
         }
         
         .modal {
@@ -246,11 +302,43 @@
         
         .team-name-input {
             margin-bottom: 0.5rem;
+            padding: 8px;
+            width: 80%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
         
-        .current-team {
-            font-weight: bold;
-            color: #3742fa;
+        .team-name-input.error {
+            border-color: #ff6b6b;
+            background-color: #ffe0e0;
+        }
+        
+        #teamCount.error {
+            border-color: #ff6b6b;
+            background-color: #ffe0e0;
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .count-error-message {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        
+        .count-error-message.show {
+            display: block;
         }
         
         #startGame {
@@ -298,12 +386,13 @@
         }
         
         .score-5 {
-            color: #3742fa;
+            color: #FFD700;
             font-weight: bold;
+            text-shadow: 0 0 3px rgba(255, 215, 0, 0.5);
         }
         
         .score-3 {
-            color: #e3e315;
+            color: #3742fa;
             font-weight: bold;
         }
         
@@ -335,141 +424,241 @@
             background-color: #2c3aef;
         }
         
-        @media (max-width: 768px) {
+        .how-to-play {
+            margin-top: 20px;
+            letter-spacing: 2px;
+            background-color: #232323f4;
+        }
+        
+        .divider {
+            height: 4px;
+            width: 80%;
+            max-width: 400px;
+            margin: 15px auto;
+            border: 0;
+            border-radius: 2px;
+            background: linear-gradient(
+                to right,
+                #949494,
+                hsl(0, 0%, 0%),
+                #949494
+            );
+        }
+        
+        /* Mobile Portrait Mode - Fullscreen */
+        @media (max-width: 768px) and (orientation: portrait) {
             body {
-                background-color: white;
+                background: linear-gradient(155deg, #a98affdd 0%, #c3cfe2 100%);
+                padding: 0;
+                margin: 0;
             }
             
             .game-container {
-                width: 100%;
-                height: 100%;
-                padding: 1rem;
+                width: 100vw;
+                height: 100vh;
+                padding: 10px;
                 border-radius: 0;
                 box-shadow: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                min-height: unset;
+                box-sizing: border-box;
             }
             
-            .board {
-                width: 300px;
-                height: 150px;
-                margin: 0 auto;
-            }
-            
-            .target-area {
-                width: 300px;
-                height: 150px;
+            .board-container,
+            .board,
+            .target-area,
+            .needle-container {
+                width: min(85vw, 350px);
+                height: min(85vw, 350px);
             }
             
             .needle {
-                height: 130px;
-                left: calc(50% - 4px);
+                height: min(42.5vw, 165px);
             }
             
             .title {
-                font-size: 36px;
+                font-size: min(8vw, 32px);
+                margin-bottom: 15px;
             }
             
-            .subtitle {
-                font-size: 18px;
+            .category-label {
+                font-size: 13px;
+                padding: 6px 8px;
+                width: 90px;
             }
             
-            .clues {
-                font-size: 18px;
+            .category-label.top {
+                top: -20px;
+            }
+            
+            .category-label.bottom {
+                bottom: -20px;
+            }
+            
+            .category-label.left {
+                left: -20px;
+            }
+            
+            .category-label.right {
+                right: -20px;
             }
             
             button {
                 font-size: 14px;
-                padding: 8px 16px;
+                padding: 10px 15px;
+                max-width: 30%;
+            }
+            
+            .controls {
+                gap: 5px;
+                margin-top: 10px;
+            }
+            
+            #score, #totalScore {
+                font-size: 16px;
+                margin-top: 10px;
+            }
+            
+            .team-score {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            
+            .countdown-number {
+                font-size: 60px;
             }
             
             .modal-content {
-                margin: 20% auto;
-                padding: 20px;
+                margin: 5% auto;
+                padding: 15px;
+                width: 95%;
             }
             
             .modal h2 {
-                font-size: 24px;
+                font-size: 20px;
             }
             
             .modal-body {
-                font-size: 14px;
+                font-size: 13px;
             }
         }
-            .divider {
-                height: 4px;
-                width: 80%;
-                max-width: 400px;
-                margin: 15px auto;
-                border: 0;
-                border-radius: 2px;
-                background: linear-gradient(
-                    to right,
-                    #949494,
-                    hsl(0, 0%, 0%),
-                    #949494
-                );
+        
+        /* Mobile Landscape Mode */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .game-container {
+                padding: 0.5rem;
+                min-height: unset;
             }
+            
+            .board-container,
+            .board,
+            .target-area,
+            .needle-container {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .needle {
+                height: 115px;
+            }
+            
+            .title {
+                font-size: 24px;
+                margin-bottom: 10px;
+            }
+            
+            .category-label {
+                font-size: 12px;
+                padding: 4px 6px;
+                width: 80px;
+            }
+            
+            button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            
+            #score, #totalScore {
+                font-size: 14px;
+                margin-top: 5px;
+            }
+            
+            .team-score {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <div id="countdownOverlay" class="countdown-overlay">
+        <div class="countdown-number" id="countdownNumber"></div>
+    </div>
+    
     <div id="howToPlayModal" class="modal">
         <div class="modal-content">
-            <h2>Wie spielt man Wavelength?</h2>
+            <h2>Wie spielt man Wellenrad?</h2>
             <div class="modal-body">
                 <ol>
-                    <li>Ein Paar gegensätzlicher Konzepte wird angezeigt.</li>
-                    <li>Die "Gedankenlesesende Person" gibt einen Hinweis, wo sich das Ziel
-                        AUF DEM SPEKTRUM zwischen den beiden Konzepten befindet.</li>
-                    <ul>
-                        <li>Zum Beispiel zwischen HOCH und TIEF.</li>
-                        <li>DIE Gedankenlesesende Person könnte "Eiffelturm" sagen!</li>
-                    </ul>
-                    <li>Jetzt liegt es am Team der "Gedankenlesesende Person", den
-                        Hinweis zu diskutieren und zu entscheiden, wohin der Zeiger gedreht wird.</li>
+                    <li>Vier Kategorien werden im Kreis angezeigt (oben, rechts, unten, links).</li>
+                    <li>Nach einem kurzen Countdown gibt die "Gedankenlesesende Person" einen Hinweis, 
+                        wo sich das Ziel im Kreis befindet.</li>
+                    <li>Das Team diskutiert und entscheidet, wohin der Zeiger gedreht wird.</li>
                     <li>Klickt und zieht den Zeiger, um eure Vermutung einzustellen.</li>
                     <li>Klickt auf "Ziel verbergen", um eure Vermutung festzulegen.</li>
                     <li>Klickt auf "Ziel aufdecken", um zu sehen, wie nah ihr dran wart.</li>
                     <li>Punktevergabe:
                         <ul>
-                            <li><span class="score-5">5 Punkte:</span> Volltreffer (dunkelblau)</li>
-                            <li><span class="score-3">3 Punkte:</span> Nah dran (gelb)</li>
-                            <li><span class="score-1">1 Punkt:</span> In der Nähe (rot)</li>
-                            <li><span class="score-0">0 Punkte:</span> Daneben</li>
+                            <li><span class="score-5">5 Punkte:</span> Volltreffer (gold - winziger Bereich)</li>
+                            <li><span class="score-3">3 Punkte:</span> Nah dran (blau - kleiner Bereich)</li>
+                            <li><span class="score-1">1 Punkt:</span> In der Nähe (rot - mittlerer Bereich)</li>
+                            <li><span class="score-0">0 Punkte:</span> Daneben (grau)</li>
                         </ul>
                     </li>
-                    <li>Klickt auf "Nächste Runde", um fortzufahren, oder "Neues Spiel", um von vorne zu beginnen.</li>
+                    <li>Klickt auf "Nächste Runde", um fortzufahren.</li>
                 </ol>
             </div>
             <button class="close-button">Verstanden!</button>
         </div>
     </div>
+    
     <div id="teamSetup" class="team-setup">
-        <h1 class="title"> Wavelength </h1>
+        <h1 class="title"> Wellenrad </h1>
         <h2>
             Sprache: <img src="https://flagcdn.com/de.svg" width="35" alt="Germany">
         </h2>
         <h3 class="divider"></h3>
         <h4>Teameinstellung</h4>
         <div class="team-count">
-            <label for="teamCount">Anzahl der Teams (1-5):</label>
-            <input type="number" id="teamCount" min="1" max="5" value="1">
+            <label for="teamCount">Anzahl der Teams (1-4):</label>
+            <input type="number" id="teamCount" min="1" max="4" value="1">
         </div>
+        <div class="count-error-message" id="countErrorMessage"></div>
         <div id="teamNames"></div>
+        <div class="error-message" id="errorMessage"></div>
         <button id="startGame">Spiel starten</button>
         <button id="howToPlayButton" class="how-to-play">Anleitung</button>
     </div>
-    <div class="game-container">
-        <h1 class="title">Wavelength</h1>
-        <div class="board">
-            <div class="target-area" id="targetArea"></div>
-            <div class="needle-container" id="needleContainer">
-                <div class="needle" id="needle"></div>
+    
+    <div class="game-container" style="display: none;">
+        <h1 class="title">Wellenrad</h1>
+        <div class="board-container">
+            <div class="board">
+                <div class="target-area" id="targetArea"></div>
+                <div class="needle-container" id="needleContainer">
+                    <div class="needle" id="needle"></div>
+                    <div class="needle-center"></div>
+                </div>
             </div>
-        </div>
-        <div class="clues-container">
-            <div class="clue" id="leftClue"></div>
-            <div class="bidirectional-arrow"></div>
-            <div class="clue" id="rightClue"></div>
+            <div class="category-labels">
+                <div class="category-label top" id="topCategory"></div>
+                <div class="category-label right" id="rightCategory"></div>
+                <div class="category-label bottom" id="bottomCategory"></div>
+                <div class="category-label left" id="leftCategory"></div>
+            </div>
         </div>
         <div class="controls">
             <button id="toggleButton">Ziel verbergen</button>
@@ -477,439 +666,634 @@
             <button id="newGameButton" style="background-color: rgba(208, 36, 36, 0.822); color: white">
                 Neues Spiel
             </button>
-            
         </div>
         <div id="score"></div>
         <div id="totalScore">Gesamtpunktzahl: 0</div>
+    </div>
+    
+    <script>
+        const needleContainer = document.getElementById("needleContainer");
+        const needle = document.getElementById("needle");
+        const targetArea = document.getElementById("targetArea");
+        const toggleButton = document.getElementById("toggleButton");
+        const nextRoundButton = document.getElementById("nextRoundButton");
+        const newGameButton = document.getElementById("newGameButton");
+        const scoreElement = document.getElementById("score");
+        const totalScoreElement = document.getElementById("totalScore");
+        const countdownOverlay = document.getElementById("countdownOverlay");
+        const countdownNumber = document.getElementById("countdownNumber");
+        const errorMessageElement = document.getElementById("errorMessage");
+        const countErrorMessageElement = document.getElementById("countErrorMessage");
         
-        <script>
-            const needleContainer = document.getElementById("needleContainer");
-            const needle = document.getElementById("needle");
-            const targetArea = document.getElementById("targetArea");
-            const toggleButton = document.getElementById("toggleButton");
-            const nextRoundButton = document.getElementById("nextRoundButton");
-            const newGameButton = document.getElementById("newGameButton");
-            const cluesElement = document.getElementById("clues");
-            const scoreElement = document.getElementById("score");
-            const totalScoreElement = document.getElementById("totalScore");
+        // Kategorien-Elemente
+            const topCategory = document.getElementById("topCategory");
+            const rightCategory = document.getElementById("rightCategory");
+            const bottomCategory = document.getElementById("bottomCategory");
+            const leftCategory = document.getElementById("leftCategory");
             
             let isDragging = false;
             let targetAngle = 0;
             let isTargetVisible = true;
             let totalScore = 0;
             let canMoveNeedle = false;
+            let currentNeedleAngle = 0;
+            const bannedWords = [
+            // Rassistische Begriffe
+            'nigger', 'nigga', 'neger', 'n+[i1!]+[g9]+', 'n.{0,2}[i1!].{0,2}[g9].{0,2}[g9]',
+            // NS-Bezüge
+            'hitler', 'h[i1!]tl[e3]r', 'nazi', 'n[a4]z[i1!]', 'heil', 'nsdap', 'führer', 'adolf',
+            // Andere offensive Begriffe
+            'hurensohn', 'hure', 'fotze', 'f[o0]tz[e3]', 'schlampe', 'missgeburt',
+            'spast', 'sp[a4]st', 'behindert', 'mongo', 'mongol', 'schwuchtel', 'faggot', 'f[a4]gg[o0]t','fag', 'f[a4]g',
+            // Religiöse oder Ethnische Beleidigungen
+            'judensau', 'jud[e3]ns[a4]u', 'zigeuner'];
             
-            const clues = [
-                ["Schlechte Gesellschaft", "Gute Gesellschaft"],
-                ["Schlechter Film", "Großartiger Film"],
-                ["Vergessenswerte Person", "Denkwürdige Person"],
-                ["In der deutschen Kultur unbedeutend", "Kulturell sehr bedeutsam"],
-                ["Trockenes Essen", "Feuchtes Mahlzeit"],
-                ["Einfach zu tun", "Schwer zu tun"],
-                ["Fühlt sich schlecht an", "Fühlt sich gut an"],
-                ["Ist in jedem Discounter zu finden", "Findest du nur online bei speziellen Onlineshops"],
-                ["Haarlos", "Haarig"],
-                ["Schwer zu merken", "Leicht zu merken"],
-                ["Kalt", "Heiß"],
-                ["Unflexibel", "Flexibel"],
-                ["Sauberes Essen", "Schmieriges Essen"],
-                ["Essen mit Besteck", "Fingerfood"],
-                ["Wunsch", "Bedürfnis"],
-                ["Seltsamer Gegenstand im Besitz", "Alltäglicher Gegenstand"],
-                ["Schlecht gemacht", "Gut gemacht"],
-                ["Ruhiger Ort", "Lauter Ort"],
-                ["Häufig", "Selten"],
-                ["Schlechter Einfluss", "Vorbild"],
-                ["Spitzes Tier", "Rundes Tier"],
-                ["Hart", "Weich"],
-                ["Hässlich", "Schön"],
-                ["Unterbezahlter Job", "Überbezahlter Job"],
-                ["Unterschätzte Fähigkeit", "Überschätzte Fähigkeit"],
-                ["Unsexy Emoji", "Sexy Emoji"],
-                ["Nutzlos", "Nützlich"],
-                ["Bösewicht", "Held"],
-                ["Fleischgericht", "Veganes Essen"],
-                ["Schlimmster Tag überhaupt", "Bester Tag überhaupt"],
-                ["Langweiliges Hobby", "Aufregendes Hobby"],
-                ["Nutzlose Superkraft", "Geniale Superkraft"],
-                ["Lahmer Partytrick", "Cooler Partytrick"],
-                ["Schrecklicher Ort für ein erstes Date", "Perfekter Ort für ein erstes Date"],
-                ["Peinliches Gesprächsthema", "Fesselndes Gesprächsthema"],
-                ["Schlechtester Pizzabelag", "Bester Pizzabelag"],
-                ["Nerviges Geräusch", "Befriedigendes Geräusch"],
-                ["Unbequeme Kleidung", "Bequeme Kleidung"],
-                ["Schlimmster Geruch", "Bester Geruch"],
-                ["Langweiliges Schulfach", "Faszinierendes Schulfach"],
-                ["Schreckliches Geschenk", "Durchdachtes Geschenk"],
-                ["Schlimme Erziehungsmethode", "Vorzeigeerziehung"],
-                ["Schlimme Schulerfahrung", "Großartige Schulerfahrung"],
-                ["Ungesunde Angewohnheit", "Gesunde Angewohnheit"],
-                ["Schlimmste Hausarbeit", "Befriedigendste Hausarbeit"],
-                ["Vergessenswerter Song", "Ohrwurm"],
-                ["Nutzlose App", "Unverzichtbare App"],
-                ["Schrecklicher Schurkenname", "Genialer Superheldenname"],
-                ["Schlechtester Geschmack", "Bester Geschmack"],
-                ["Langweiliges Museumsstück", "Atemberaubendes Museumsstück"],
-                ["Schrecklicher Bandname", "Genialer Bandname"],
-                ["Schlechtestes Jahrbuch-Zitat", "Bestes Jahrbuch-Zitat"],
-                ["Lahme Ausrede", "Glaubwürdige Ausrede"],
-                ["Schreckliches Maskottchen", "Liebenswertes Maskottchen"],
-                ["Schlimmste Erfindung", "Lebensverändernde Erfindung"],
-                ["Nervige Werbung", "Unvergessbare Werbung"],
-                ["Schlechter Anmachspruch", "Smarter Anmachspruch"],
-                ["Schlechtester Sandwich-Belag", "Bester Sandwich-Belag"],
-                ["Langweiliger Bildschirmschoner", "Hypnotischer Bildschirmschoner"],
-                ["Nutzloser Life-Hack", "Wegweisender Life-Hack"],
-                ["Schreckliche Sitcom-Idee", "Urkomische Sitcom-Idee"],
-                ["Schlechtestes Karaoke-Lied", "Publikumsliebling (Karaoke)"],
-                ["Nerviger Social-Media-Trend", "Lustiger Social-Media-Trend"],
-                ["Schrecklicher Künstlername", "Unvergesslicher Künstlername"],
-                ["Schlechtester Zungenbrecher", "Anspruchsvollster Zungenbrecher"],
-                ["Langweiliger Bildschirmschoner", "Faszinierender Bildschirmschoner"],
-                ["Schreckliches Tattoo", "Bedeutungsvolles Tattoo"],
-                ["Schlechtester Autoaufkleber", "Kreativer Autoaufkleber"],
-                ["Nerviger Spruch", "Ikonischer Spruch"],
-                ["Schrecklicher Teamname", "Einschüchternder Teamname"],
-                ["Schlimmste Geschmackskombination", "Unerwartet leckere Geschmackskombination"],
-                ["Nutzloser Uni-Kurs", "Lebensverändernder Uni-Kurs"],
-                ["Schreckliches Podcast-Thema", "Süchtig machendes Podcast-Thema"],
-                ["Schlimmstes Fahrgeschäft", "Aufregendes Fahrgeschäft"],
-                ["Schreckliches Workout", "Effektives Workout"],
-                ["Schlimmstes Brettspiel", "Süchtig machendes Brettspiel"],
-                ["Nervige Angewohnheit", "Liebenswerte Eigenart"],
-                ["Schrecklicher Streich", "Harmloser Streich"],
-                ["Schlimmstes Müsli-Maskottchen", "Geliebtes Müsli-Maskottchen"],
-                ["Sanfter Weckerton", "Nerviger Weckerton"],
-                ["Schrecklicher Urlaubsort", "Traum-Urlaubsziel"],
-                ["Schlimmstes Spielzeug", "Unverzichtbares Spielzeug"],
-                ["Nerviger TV-Charakter", "Fan-Liebling (TV-Charakter)"],
-                ["Schlimmste Eissorte", "Innovative Eissorte"],
-                ["Nervige Text-Abkürzung", "Nützliche Text-Abkürzung"],
-                ["Schreckliche Kostümidee", "Kreative Kostümidee"],
-                ["Schlimmster Kochfehler", "Wegweisender Kochtipp"],
-                ["Nervige Übung", "Lustige Übung"],
-                ["Schreckliche Trennungsmethode", "Respektvolle Trennungsmethode"],
-                ["Schlechtes Motivationsposter", "Wirklich motivierendes Poster"],
-                ["Nerviges Auto-Feature", "Nützliches Auto-Feature"],
-                ["Lügensau", "Ehrliche Haut"],
-                ["Wird sofort als Unternehmen floppen", "Sofort erfolgreiche Geschäftsidee"],
-                ["Schreckliches Versteck", "Cleveres Versteck"],
-                ["Schlimmster Trend aus der Zeit deiner Eltern", "Cooler Retro-Trend"],
-                ["Nerviges Touristenverhalten", "Respektvolles Touristenverhalten"],
-                ["Schreckliche Mitbewohnende-Angewohnheit", "Ideale Mitbewohnende-Eigenschaft"],
-                ["Schlechtester Grund, sich krankzumelden", "Legitimer Grund, sich krankzumelden"],
-                ["Nervige Handy-Benachrichtigung", "Wichtige Handy-Benachrichtigung"],
-                ["Schrecklicher Bootsname", "Kreativer Bootsname"],
-                ["Schlechtester Trennungsgrund", "Gültiger Trennungsgrund"],
-                ["Nerviges Verhalten im Fitnessstudio", "Richtige Fitnessstudio-Etikette"],
-                ["Schreckliche Fluggesellschaft", "Top-bewertete Fluggesellschaft"],
-                ["Schlimmster Toiletten-Graffiti-Spruch", "Tiefgründiges Toiletten-Graffiti"],
-                ["Schlechte Luft zum Atmen", "Gute Luft zum Atmen"],
-                ["Nerviges Konzert-Verhalten", "Rücksichtsvolles Konzert-Verhalten"],
-                ["Schlechtester Grund für ein Haustier", "Guter Grund für ein Haustier"],
-                ["Spam E-Mail-Betreff", "Wichtiger E-Mail-Betreff"],
-                ["Einfallsloser WLAN-Name", "Kreativer WLAN-Name"],
-                ["Zeitlos", "Modetrend"],
-                ["Allgemeinwissen", "Nerd-Wissen"],
-                ["Entspannendes Videospiel", "Stressiges Videospiel"],
-                ["Spontankauf", "Durchdachter Kauf"],
-                ["Geringes Risiko", "Hohes Risiko"],
-                ["Eindimensionale Figur aus Film/Serie", "Tief-Komplexe Figur"],
-                ["Unnötige Fortsetzung", "Gelungene Fortsetzung"],
-                ["Schlechte Buchverfilmung", "Meisterhafte Buchverfilmung"],
-                ["Chaotischer Schreibtisch", "Minimalistischer Schreibtisch"],
-                ["Flachwitz", "Intelligenter Humor"],
-                ["Süßes Frühstück", "Herzhaftes Frühstück"],
-                ["Man braucht Talent", "Kann jede Person lernen"],
-                ["Verzeihlich", "Unverzeihlich"],
-                ["Normales Haustier", "Exotisches Haustier"],
-                ["Analoge Tätigkeit", "Digitale Tätigkeit"],
-                ["Für die Ewigkeit gemacht", "Wegwerfprodukt"],
-                ["Riecht natürlich", "Riecht künstlich"],
-                ["Kann man alleine machen", "Braucht eine Gruppe"],
-                ["Gute Angewohnheit", "Schlechte Angewohnheit"],
-                ["Unbequeme Schuhe", "Bequeme Schuhe"],
-                ["Unterbewertete Marke", "Überbewertete Marke"],
-                ["Unnötige Besprechung", "Wichtige Besprechung"],
-                ["Gewöhnlicher Name", "Außergewöhnlicher Name"],
-                ["Langweiliger Supermarkt", "Spannender Supermarkt"],
-                ["Gefährlicher Sport", "Sicherer Sport"],
-                ["Formell", "Informell"],
-                ["Instinkt", "Logik"],
-                ["Brainrod Content","Fortbildung oder Wissenschafts Content"],
-                ["Unverständliche Behörde", "Hilfsbereite Behörde"],
-                ["Introvertiert", "Extrovertiert"],
-                ["Morgens absolut unbrauchbar", "Frühaufsteh-Genie"],
-                ["Kann man reparieren", "Schmeißt man lieber weg"],
-                ["Langsames WLAN", "Turbo-Internet"],
-                ["Unbekannter Feiertag", "Nationaler Feiertag"],
-                ["Büro ohne Fenster", "Büro mit Aussicht"],
-                ["Klimafreundlich", "Umweltschädlich"],
-                ["Unangenehme Überraschung", "Positive Überraschung"],
-                ["Konnte man vor 10 Jahren noch nicht kaufen", "Wird es in 10 Jahren noch geben"],
-                ["Zuviel Smalltalk", "Tiefgründiges Gespräch"],
-                ["Langes Meeting", "Kurzes effektives Meeting"],
-                ["Macht sofort gute Laune", "Raubt Energie"],
-                ["Leerer Kühlschrank", "Voller Kühlschrank"],
-                ["Lieblingsjahreszeit", "Unangenehme Jahreszeit"],
-                ["Arbeitet lieber allein", "Arbeitet lieber im Team"],
-                ["Kaffeeabhängig", "Koffeinfrei glücklich"],
-                ["Offline-Tag", "Digital-Tag"],
-                ["Plant alles minutiös", "Macht alles spontan"],
-                ["Wenig Emotion", "Viel Emotion"],
-                ["Kreatives Chaos", "Strukturierte Klarheit"],
-                ["Minimalistisch", "Opulent"],
-                ["Leises Hobby", "Lautes Hobby"],
-                ["Alles sofort erledigen", "Aufschieben bis morgen"],
-                ["Gemütlicher Abend", "Actionreicher Abend"],
-                ["Hat keine Problem mit Orientierung", "Ist nach einer Minute in einem neuen Ort verloren"],
-                ["Kocht nie", "Kocht fast täglich"],
-                ["Serienmarathon", "Sportlicher Tag"],
-                ["Futter für den Algorithmus", "Inhalt mit Substanz"],
-                ["Lernt autodidaktisch", "Lernt lieber durch Unterricht"],
-                ["Risikofreudig", "Sicherheitsliebend"],
-                ["Perfektionistisch", "Locker und pragmatisch"],
-                ["Nie ohne Kopfhörer", "Nie ohne Buch"],
-                ["Zieht in die Stadt", "Zieht aufs Land"],
-                ["Liebt spontane Ausflüge", "Bleibt lieber zuhause"],
-                ["Team Haustier", "Niemals kommt mir ein Tier ins Haus"],
-            ];
+        function isNameBanned(name) {
+            const lowerName = name.toLowerCase().trim();
             
-            clues.forEach((pair, index) => {
-             // Mit einer 50%-Wahrscheinlichkeit werden die beiden Begriffe im Paar vertauscht.
-                if (Math.random() <= 0.5) {
-                    // Tausche die Elemente des Paares an der aktuellen Position
-                    [clues[index][0], clues[index][1]] = [clues[index][1], clues[index][0]];
+            // Entferne Leerzeichen, Sonderzeichen für bessere Erkennung
+            const cleanedName = lowerName.replace(/[\s\-_\.]/g, '');
+            
+            // Ersetze Leetspeak-Zahlen für zusätzliche Prüfung der Banned Names
+            const decodedName = cleanedName
+                .replace(/0/g, 'o')
+                .replace(/1/g, 'i')
+                .replace(/3/g, 'e')
+                .replace(/4/g, 'a')
+                .replace(/5/g, 's')
+                .replace(/7/g, 't')
+                .replace(/9/g, 'g');
+            
+            return bannedWords.some(banned => {
+                try {
+                    // Erstelle RegEx Pattern für Banned Words, damit ein paar Varianten erkannt werden
+                    const pattern = new RegExp(banned, 'i');
+                    
+                    // Teste gegen alle Varianten so gut es geht
+                    return pattern.test(lowerName) || 
+                            pattern.test(cleanedName) ||
+                            pattern.test(decodedName);
+                } catch (e) {
+                    // Fallback für ungültige RegEx
+                    return lowerName.includes(banned) || 
+                            cleanedName.includes(banned) ||
+                            decodedName.includes(banned);
                 }
             });
-            const teamSetup = document.getElementById('teamSetup');
-            const teamCount = document.getElementById('teamCount');
-            const teamNames = document.getElementById('teamNames');
-            const startGameButton = document.getElementById('startGame');
-            const gameContainer = document.querySelector('.game-container');
+        }
             
-            let teams = [];
+            function checkForDuplicateNames() {
+                const inputs = Array.from(teamNames.children);
+                const names = inputs.map(input => input.value.toLowerCase().trim()).filter(name => name);
+                const uniqueNames = new Set(names);
+                return names.length !== uniqueNames.size;
+            }
             
-            teamCount.addEventListener('change', updateTeamInputs);
+        // Hilfsfunktion um Winkel zu normalisieren für den ganzen Kreis (0-360)
+        function normalizeAngle(angle) {
+            angle = angle % 360;
+            if (angle < 0) angle += 360;
+            return angle;
+        }
+                // Erweiterte und bereinigte Kategorien-Liste für 4 Richtungen
+        const categories = [
+            ["Kalt", "Heiß", "Trocken", "Feucht"],
+            ["Langweilig", "Aufregend", "Entspannend", "Stressig"],
+            ["Billig", "Teuer", "Wertvoll", "Wertlos"],
+            ["Alt", "Neu", "Zeitlos", "Trendig"],
+            ["Süß", "Sauer", "Bitter", "Salzig"],
+            ["Laut", "Leise", "Harmonisch", "Chaotisch"],
+            ["Hart", "Weich", "Flexibel", "Starr"],
+            ["Schnell", "Langsam", "Konstant", "Variabel"],
+            ["Dunkel", "Hell", "Bunt", "Einfarbig"],
+            ["Natürlich", "Künstlich", "Organisch", "Synthetisch"],
+            ["Einfach", "Komplex", "Intuitiv", "Verwirrend"],
+            ["Groß", "Klein", "Mittel", "Extrem"],
+            ["Schwer", "Leicht", "Dicht", "Luftig"],
+            ["Glatt", "Rau", "Wellig", "Eckig"],
+            ["Modern", "Traditionell", "Futuristisch", "Retro"],
+            ["Mutig", "Vorsichtig", "Riskant", "Sicher"],
+            ["Formal", "Casual", "Elegant", "Lässig"],
+            ["Digital", "Analog", "Hybrid", "Mechanisch"],
+            ["Gesund", "Ungesund", "Nahrhaft", "Leer"],
+            ["Stark", "Schwach", "Robust", "Fragil"],
+            ["Nah", "Fern", "Erreichbar", "Unerreichbar"],
+            ["Öffentlich", "Privat", "Gemeinschaftlich", "Individuell"],
+            ["Rational", "Emotional", "Logisch", "Intuitiv"],
+            ["Aktiv", "Passiv", "Dynamisch", "Statisch"],
+            ["Sauber", "Schmutzig", "Steril", "Unordentlich"],
+            ["Jung", "Alt", "Reif", "Unreif"],
+            ["Bekannt", "Unbekannt", "Berühmt", "Obskur"],
+            ["Nützlich", "Nutzlos", "Praktisch", "Dekorativ"],
+            ["Echt", "Falsch", "Authentisch", "Imitiert"],
+            ["Positiv", "Negativ", "Neutral", "Polarisierend"],
+            ["Innen", "Außen", "Zentral", "Peripher"],
+            ["Offen", "Geschlossen", "Zugänglich", "Versperrt"],
+            ["Voll", "Leer", "Überfüllt", "Spärlich"],
+            ["Seriös", "Lustig", "Ernst", "Albern"],
+            ["Professionell", "Amateurhaft", "Experte*in", "Anfänger*in"],
+            ["Urban", "Ländlich", "Vorstädtisch", "Wildnis"],
+            ["Tag", "Nacht", "Dämmerung", "Mittag"],
+            ["Sommer", "Winter", "Frühling", "Herbst"],
+            ["Nord", "Süd", "Ost", "West"],
+            ["Himmel", "Erde", "Wasser", "Feuer"],
+            ["Glücklich", "Traurig", "Wütend", "Friedlich"],
+            ["Erfolgreich", "Gescheitert", "Mittelmäßig", "Außergewöhnlich"],
+            ["Freundlich", "Feindlich", "Neutral", "Aggressiv"],
+            ["Kreativ", "Analytisch", "Künstlerisch", "Wissenschaftlich"],
+            ["Spontan", "Geplant", "Improvisiert", "Strukturiert"],
+            ["Minimalistisch", "Maximalistisch", "Schlicht", "Überladen"],
+            ["Mainstream", "Alternative", "Populär", "Nische"],
+            ["Lokal", "Global", "Regional", "International"],
+            ["Gewöhnlich", "Außergewöhnlich", "Normal", "Speziell"],
+            ["Scharf", "Mild", "Würzig", "Fade"],
+            ["Frisch", "Abgestanden", "Knusprig", "Matschig"],
+            ["Transparent", "Undurchsichtig", "Klar", "Trüb"],
+            ["Maskulin", "Feminin", "Neutral", "Androgyn"],
+            ["Ordentlich", "Chaotisch", "Strukturiert", "Zufällig"],
+            ["Vertraut", "Fremd", "Heimisch", "Exotisch"],
+            ["Oberflächlich", "Tiefgründig", "Flach", "Komplex"],
+            ["Introvertiert", "Extrovertiert", "Charismatisch", "Zurückhaltend"],
+            ["Optimistisch", "Pessimistisch", "Realistisch", "Träumerisch"],
+            ["Sparsam", "Verschwenderisch", "Großzügig", "Geizig"],
+            ["Pünktlich", "Unpünktlich", "Überpünktlich", "Immer zu spät"],
+            ["Geduldig", "Ungeduldig", "Gelassen", "Nervös"],
+            ["Abenteuerlich", "Ängstlich", "Wagemutig", "Sicherheitsorientiert"],
+            ["Selbstbewusst", "Unsicher", "Arrogant", "Bescheiden"],
+            ["Hilfsbereit", "Egoistisch", "Selbstlos", "Eigennützig"],
+            ["Kultur-Kenner*in", "Kultur-Banaus*in", "Hochkultur", "Popkultur"],
+            ["Tierliebend", "Tierfeindlich", "Katzenmensch", "Hundemensch"],
+            ["Morgenmensch", "Nachtmensch", "Mittagstief", "Immer aktiv"],
+            ["Kaffee-Junkie", "Tee-Liebhaber*in", "Wasser-Trinker*in", "Energy-Drink-Fan"],
+            ["Sportskanone", "Couch-Potato", "Fitness-Fanatiker*in", "Bewegungsmuffel"],
+            ["Technik-Affin", "Technik-Skeptiker*in", "Early Adopter", "Analog-Fan"],
+            ["Risikofreudig", "Sicherheitsliebend", "Adrenalin-Junkie", "Angsthase"],
+            ["Multitasking-Profi", "Fokus-Meister*in", "Ständig überfordert", "Tiefenentspannt"],
+            ["Naturverbunden", "Stadtmensch", "Wander-Fan", "Stubenhocker*in"],
+            ["Musik-Allesfresser*in", "Stille-Genießer*in", "Konzert-Gänger*in", "Lärmempfindlich"],
+            ["Bücherwurm", "Serien-Junkie", "Film-Fan", "Podcast-Hörer*in"],
+            ["Reiselustig", "Heimatverbunden", "Backpacker*in", "Luxus-Urlauber*in"],
+            ["Koch-Künstler*in", "Lieferdienst-König*in", "Hobby-Bäcker*in", "Mikrowellen-Magier*in"],
+            ["Umweltbewusst", "Konsum-Enthusiast*in", "Zero-Waste-Held*in", "Verpackungs-Liebhaber*in"],
+            ["Handwerklich begabt", "Zwei linke Hände", "DIY-König*in", "Reparatur-Muffel"],
+            ["Gamer*in", "Brettspiel-Fan", "Social-Media-Star", "Digital-Detox-Anhänger*in"],
+            ["Qualitätsbewusst", "Schnäppchen-Jäger*in", "Markentreu", "No-Name-Fan"],
+            ["Planungs-Fanatiker*in", "Spontaneitäts-Künstler*in", "To-Do-Listen-Gott", "YOLO-Mentalität"],
+            ["Diskussionsfreudig", "Konfliktscheu", "Debattier-Club-Präsident*in", "Harmoniesüchtig"],
+            ["Kritikfähig", "Dünnhäutig", "Selbstreflektiert", "Beratungsresistent"],
+            ["Kompromissbereit", "Stur", "Diplomat*in", "Rechthaber*in"],
+            ["Innovativ", "Traditionsbewusst", "Visionär*in", "Nostalgiker*in"],
+            ["Detailorientiert", "Großes Ganzes-Denker*in", "Mikro-Manager*in", "Überblick-Bewahrer*in"],
+            ["Entscheidungsfreudig", "Entscheidungsunfähig", "Durchsetzungsstark", "Unentschlossen"],
+            ["Humorvoll", "Todernst", "Sarkastisch", "Albern"],
+            ["Belastbar", "Stressanfällig", "Fels in der Brandung", "Nervenbündel"],
+            ["Lernbegierig", "Lernfaul", "Wissensdurstig", "Desinteressiert"],
+            ["Achtsam", "Gedankenverloren", "Im Hier und Jetzt", "Ständig abgelenkt"],
+            ["Diszipliniert", " undiszipliniert", "Willensstark", "Prokrastinierend"],
+            ["Verantwortungsbewusst", "Verantwortungslos", "Pflichtbewusst", "Leichtsinnig"],
+            ["Team-Player*in", "Einzelkämpfer*in", "Kooperativ", "Kompetitiv"],
+            ["Führungspersönlichkeit", "Mitläufer*in", "Autoritär", "Demokratisch"],
+
+            // Abstrakte & Philosophische Konzepte
+            ["Eine gute Tat", "Eine böse Tat", "Eine notwendige Tat", "Eine nutzlose Tat"],
+            ["Wissen", "Glaube", "Meinung", "Fakt"],
+            ["Freiheit", "Sicherheit", "Ordnung", "Chaos"],
+            ["Schicksal", "Zufall", "Freier Wille", "Vorhersehung"],
+            ["Utopie", "Dystopie", "Realität", "Fantasie"],
+            ["Vergangenheit", "Zukunft", "Gegenwart", "Alternative Zeitlinie"],
+            ["Eine unterschätzte Idee", "Eine überschätzte Idee", "Eine gefährliche Idee", "Eine geniale Idee"],
+            ["Wahrheit", "Lüge", "Geheimnis", "Gerücht"],
+
+            // Popkultur & Medien
+            ["Blockbuster", "Indie-Film", "Dokumentation", "Kurzfilm"],
+            ["Ohrwurm", "Vergessenswerter Song", "Guilty Pleasure", "Klassiker"],
+            ["Gutes Meme", "Cringe Meme", "Totes Meme", "Insider-Witz"],
+            ["Gute Buchverfilmung", "Schlechte Buchverfilmung", "Besser als das Buch", "Unverfilmbar"],
+            ["50er-Nostalgie", "90er-Nostalgie", "2000er-Nostalgie", "Zukunfts-Hype"],
+            ["So schlecht, dass es gut ist", "Unfreiwillig komisch", "Einfach nur schlecht", "Meisterwerk"],
+
+            // Absurde & Lustige Kombinationen
+            ["Ist ein Sandwich?", "Ist eine Suppe?", "Ist ein Salat?", "Ist ein Verbrechen?"],
+            ["Riecht besser als es schmeckt", "Schmeckt besser als es riecht", "Sieht gut aus", "Klingt gut"],
+            ["Guter Ort für ein Nickerchen", "Schlechter Ort für ein Nickerchen", "Ort zum Verstecken", "Ort für eine Party"],
+            ["Normal im Mittelalter", "Normal heute", "Normal in 100 Jahren", "Niemals normal"],
+            ["Braucht Batterien", "Braucht WLAN", "Braucht Liebe", "Braucht keine Anleitung"],
+            ["Eine Aktion einer Katze", "Eine Aktion eines Hundes", "Eine Aktion eines Menschen", "Eine Aktion einer KI"],
+            ["Sollte illegal sein", "Sollte Pflicht sein", "Ist legal", "Ist eine Grauzone"],
+            ["Etwas, das man flüstert", "Etwas, das man schreit", "Etwas, das man singt", "Etwas, das man denkt"],
             
-            function updateTeamInputs() {
-                const count = parseInt(teamCount.value);
+            // Gemischte Konzepte
+            ["Kopfentscheidung", "Bauchentscheidung", "Herzentscheidung", "Zufallsentscheidung"],
+            ["Temporär", "Permanent", "Zyklisch", "Einmalig"],
+            ["Fertigkeit", "Talent", "Wissen", "Glück"],
+            ["Ein Geruch, der beruhigt", "Ein Geruch, der nervt", "Ein vertrauter Geruch", "Ein neuer Geruch"],
+            ["Etwas, das man sammelt", "Etwas, das man wegwirft", "Etwas, das man recycelt", "Etwas, das man vergisst"],
+            ["Happy End", "Trauriges Ende", "Offenes Ende", "Plot-Twist am Ende"],
+            ["Ein Geräusch, das beruhigt", "Ein Geräusch, das nervt", "Ein lautes Geräusch", "Absolute Stille"],
+            ["Etwas aus Holz", "Etwas aus Metall", "Etwas aus Plastik", "Etwas aus Glas"],
+            ["Street Smart", "Book Smart", "Emotionale Intelligenz", "Kreative Intelligenz"],
+            ["Ein Grund zu feiern", "Ein Grund zu trauern", "Ein normaler Dienstag", "Ein nationaler Feiertag"],
+            ["Ein Wort, das klug klingt", "Ein Wort, das dumm klingt", "Ein Schimpfwort", "Ein Kosewort"],
+            ["Ein Job für eine Maschine", "Ein Job für eine*n Künstler*in", "Ein Job für eine*n Politiker*in", "Ein Job, den es nicht mehr gibt"],
+            ["Ein Ort, an dem man allein sein will", "Ein Ort für eine riesige Party", "Ein geheimer Ort", "Ein überfüllter Ort"],
+            ["Eine Regel, die man brechen sollte", "Eine Regel, die man befolgen sollte", "Eine ungeschriebene Regel", "Eine dumme Regel"]
+        ];
+        
+        categories.forEach((quad) => {
+            // Mische die 4 Kategorien zufällig
+            for (let i = quad.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [quad[i], quad[j]] = [quad[j], quad[i]];
+            }
+        });
+        
+        const teamSetup = document.getElementById('teamSetup');
+        const teamCount = document.getElementById('teamCount');
+        const teamNames = document.getElementById('teamNames');
+        const startGameButton = document.getElementById('startGame');
+        const gameContainer = document.querySelector('.game-container');
+        
+        let teams = [];
+        let currentTeamIndex = 0;
+        
+        teamCount.addEventListener('change', updateTeamInputs);
+        teamCount.addEventListener('input', updateTeamInputs);
+        
+        function updateTeamInputs() {
+            const count = parseInt(teamCount.value);
+            
+            // Reset error state
+            teamCount.classList.remove('error');
+            countErrorMessageElement.classList.remove('show');
+            countErrorMessageElement.textContent = '';
+            
+            // Stelle sicher, dass der Wert zwischen 1 und 4 liegt
+            if (count < 1 || isNaN(count)) {
+                teamCount.classList.add('error');
+                countErrorMessageElement.textContent = 'Bitte wähle mindestens 1 Team.';
+                countErrorMessageElement.classList.add('show');
+                teamCount.value = 1;
                 teamNames.innerHTML = '';
-                for (let i = 0; i < count; i++) {
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.placeholder = `Name des ${i + 1} Teams`;
-                    input.className = 'team-name-input';
-                    teamNames.appendChild(input);
-                }
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = `Name des 1. Teams`;
+                input.className = 'team-name-input';
+                teamNames.appendChild(input);
+                return;
+            }
+            if (count > 4) {
+                teamCount.classList.add('error');
+                countErrorMessageElement.textContent = 'Maximal 4 Teams sind erlaubt.';
+                countErrorMessageElement.classList.add('show');
+                teamCount.value = 4;
             }
             
-            let currentTeamIndex = 0;
-
-            function updateScoreDisplay() {
-                const scoreHTML = teams.map((team, index) =>
-                    `<div class="${index === currentTeamIndex ? 'current-team' : ''}">
-      ${team.name}: ${team.score}
-    </div>`
-                ).join('');
-                totalScoreElement.innerHTML = scoreHTML;
+            const finalCount = Math.min(4, Math.max(1, count));
+            teamNames.innerHTML = '';
+            for (let i = 0; i < finalCount; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = `Name des ${i + 1}. Teams`;
+                input.className = 'team-name-input';
+                teamNames.appendChild(input);
             }
-
-            startGameButton.addEventListener('click', () => {
-                teams = Array.from(teamNames.children).map((input, index) => ({
-                    name: input.value || `Team ${index + 1}`,
-                    score: 0
-                }));
-                teamSetup.style.display = 'none';
-                gameContainer.style.display = 'block';
-                updateScoreDisplay();
-                nextRoundButton.click(); // Start the first round
+        }
+        
+        function updateScoreDisplay() {
+            const scoreHTML = teams.map((team, index) =>
+                `<div class="team-score ${index === currentTeamIndex ? 'current-team' : ''}">
+                    ${team.name}: ${team.score}
+                </div>`
+            ).join('');
+            totalScoreElement.innerHTML = scoreHTML;
+        }
+        
+        function showCountdown(callback) {
+            let count = 3;
+            countdownOverlay.style.display = 'flex';
+            
+            // Verstecke das Ziel während des Countdowns
+            targetArea.classList.add('hidden-for-countdown');
+            
+            const interval = setInterval(() => {
+                if (count > 0) {
+                    countdownNumber.textContent = count;
+                    countdownNumber.style.animation = 'none';
+                    setTimeout(() => {
+                        countdownNumber.style.animation = 'pulse 1s ease-in-out';
+                    }, 10);
+                    count--;
+                } else {
+                    clearInterval(interval);
+                    countdownOverlay.style.display = 'none';
+                    // Zeige das Ziel wieder nach dem Countdown
+                    targetArea.classList.remove('hidden-for-countdown');
+                    callback();
+                }
+            }, 1000);
+            
+            countdownNumber.textContent = count;
+            count--;
+        }
+        
+        function showCategories() {
+            topCategory.classList.add('visible');
+            rightCategory.classList.add('visible');
+            bottomCategory.classList.add('visible');
+            leftCategory.classList.add('visible');
+        }
+        
+        function hideCategories() {
+            topCategory.classList.remove('visible');
+            rightCategory.classList.remove('visible');
+            bottomCategory.classList.remove('visible');
+            leftCategory.classList.remove('visible');
+        }
+        
+        startGameButton.addEventListener('click', () => {
+            // Reset error states
+            errorMessageElement.classList.remove('show');
+            errorMessageElement.textContent = '';
+            Array.from(teamNames.children).forEach(input => input.classList.remove('error'));
+            
+            // Check if team count is valid
+            const count = parseInt(teamCount.value);
+            if (count < 1 || count > 4 || isNaN(count)) {
+                teamCount.classList.add('error');
+                countErrorMessageElement.textContent = 'Bitte wähle eine gültige Teamanzahl (1-4).';
+                countErrorMessageElement.classList.add('show');
+                return;
+            }
+            
+            // Check for banned words
+            const inputs = Array.from(teamNames.children);
+            let hasBannedWords = false;
+            let hasDuplicates = false;
+            
+            inputs.forEach(input => {
+                if (input.value && isNameBanned(input.value)) {
+                    input.classList.add('error');
+                    hasBannedWords = true;
+                }
             });
-
-            // Initialisiere mit 2 Teams
-            updateTeamInputs();
-
-            // Verstecke Spiel-Container am Anfang
-            gameContainer.style.display = 'none';
-
-            function setTargetArea() {
-                targetAngle = Math.random() * 180 - 90;
-                const gradient = `conic-gradient(
-                from -90deg at 50% 100%,
-                #a4b0be 0deg ${targetAngle - 22.5 + 90}deg,
-                #ff6b6b ${targetAngle - 22.5 + 90}deg ${targetAngle - 13.5 + 90
-                    }deg,
-                #feca57 ${targetAngle - 13.5 + 90}deg ${targetAngle - 4.5 + 90
-                    }deg,
-                #3742fa ${targetAngle - 4.5 + 90}deg ${targetAngle + 4.5 + 90 // Dark blue for 5 points
-                    }deg,
-                #feca57 ${targetAngle + 4.5 + 90}deg ${targetAngle + 13.5 + 90
-                    }deg,
-                #ff6b6b ${targetAngle + 13.5 + 90}deg ${targetAngle + 22.5 + 90
-                    }deg,
-                #a4b0be ${targetAngle + 22.5 + 90}deg 180deg
-            )`;
-                targetArea.style.background = gradient;
+            
+            if (hasBannedWords) {
+                errorMessageElement.textContent = 'Bitte verwende angemessene Teamnamen.';
+                errorMessageElement.classList.add('show');
+                return;
             }
-
-            function setRandomClues() {
-                const randomIndex = Math.floor(Math.random() * clues.length);
-                const [left, right] = clues[randomIndex];
-                document.getElementById("leftClue").textContent = left;
-                document.getElementById("rightClue").textContent = right;
+            
+            // Check for duplicates
+            if (checkForDuplicateNames()) {
+                errorMessageElement.textContent = 'Jedes Team muss einen einzigartigen Namen haben.';
+                errorMessageElement.classList.add('show');
+                
+                const names = inputs.map(input => input.value.toLowerCase().trim());
+                inputs.forEach((input, i) => {
+                    if (names.indexOf(names[i]) !== i && names[i]) {
+                        input.classList.add('error');
+                    }
+                });
+                return;
             }
-
-            function calculateScore(angle) {
-                const diff = Math.abs(angle - targetAngle);
-                if (diff <= 4.5) {
-                    triggerConfetti();
-                    return 5;
-                };
-                if (diff <= 13.5) return 3;
-                if (diff <= 22.5) return 1;
-                return 0;
+            
+            teams = inputs.map((input, index) => ({
+                name: input.value || `Team ${index + 1}`,
+                score: 0
+            }));
+            
+            teamSetup.style.display = 'none';
+            gameContainer.style.display = 'block';
+            updateScoreDisplay();
+            nextRoundButton.click();
+        });
+        
+        updateTeamInputs();
+        
+        function setTargetArea() {
+            targetAngle = Math.random() * 360;
+            
+            // Normalisiere alle Winkel
+            const target = normalizeAngle(targetAngle);
+            const angle1 = normalizeAngle(target - 20);
+            const angle2 = normalizeAngle(target - 8);
+            const angle3 = normalizeAngle(target - 2);
+            const angle4 = normalizeAngle(target + 2);
+            const angle5 = normalizeAngle(target + 8);
+            const angle6 = normalizeAngle(target + 20);
+            
+            // Erstelle Gradient-Strings basierend auf dem Zielwinkel
+            let gradient;
+            
+            // Wenn der Zielwinkel nahe bei 0° liegt, müssen wir den Gradient anders aufbauen
+            if (target < 35 || target > 325) {
+                // Spezialfall für Winkel nahe 0°/360°
+                gradient = `conic-gradient(
+                    from 0deg at 50% 50%,
+                    #ff6b6b ${angle1}deg,
+                    #3742fa ${angle2}deg,
+                    #FFD700 ${angle3}deg,
+                    #FFD700 ${angle4}deg,
+                    #3742fa ${angle5}deg,
+                    #ff6b6b ${angle6}deg,
+                    #a4b0be ${angle6 + 0.1}deg
+                )`;
+            } else {
+                gradient = `conic-gradient(
+                    from 0deg at 50% 50%,
+                    #a4b0be 0deg,
+                    #a4b0be ${angle1}deg,
+                    #ff6b6b ${angle1}deg,
+                    #ff6b6b ${angle2}deg,
+                    #3742fa ${angle2}deg,
+                    #3742fa ${angle3}deg,
+                    #FFD700 ${angle3}deg,
+                    #FFD700 ${angle4}deg,
+                    #3742fa ${angle4}deg,
+                    #3742fa ${angle5}deg,
+                    #ff6b6b ${angle5}deg,
+                    #ff6b6b ${angle6}deg,
+                    #a4b0be ${angle6}deg,
+                    #a4b0be 360deg
+                )`;
             }
-
-            function handleStart(e) {
-                if (!canMoveNeedle) return;
-                isDragging = true;
-                e.preventDefault(); // Standard-Touch-Verhalten verhindern
+            
+            targetArea.style.background = gradient;
+        }
+        
+        function setRandomCategories() {
+            const randomIndex = Math.floor(Math.random() * categories.length);
+            const [top, right, bottom, left] = categories[randomIndex];
+            topCategory.textContent = top;
+            rightCategory.textContent = right;
+            bottomCategory.textContent = bottom;
+            leftCategory.textContent = left;
+        }
+        
+        function calculateScore(angle) {
+            // Normalisiere beide Winkel auf 0-360
+            const normalizedTarget = normalizeAngle(targetAngle);
+            const normalizedNeedle = normalizeAngle(angle);
+            
+            // Berechne die kürzeste Winkeldifferenz
+            let diff = Math.abs(normalizedTarget - normalizedNeedle);
+            if (diff > 180) diff = 360 - diff;
+            
+            // Feste Größenunterschiede
+            if (diff <= 2) {
+                triggerConfetti();
+                return 5;
             }
-
-            function triggerConfetti() {
+            if (diff <= 12) return 3;
+            if (diff <= 35) return 1;
+            return 0;
+        }
+        
+        function handleStart(e) {
+            if (!canMoveNeedle) return;
+            isDragging = true;
+            e.preventDefault();
+        }
+        
+        function triggerConfetti() {
+            if (typeof confetti !== 'undefined') {
                 confetti({
                     particleCount: 150,
                     spread: 90,
                     origin: { y: 0.6 },
-                    colors: ['#ff4757', '#feca57', '#3742fa'],
-                    ticks: 200,
+                    colors: ['#FFD700', '#feca57', '#3742fa'],
+                    ticks: 300,
                     shapes: ['square'],
                     gravity: 0.8,
                     scalar: 1.2
                 });
             }
-
-            function handleMove(e) {
-                if (!isDragging || !canMoveNeedle) return;
-                e.preventDefault(); // Standard-Touch-Verhalten verhindern
-                const rect = needleContainer.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.bottom;
-
-                let clientX, clientY;
-                if (e.type === "touchmove") {
-                    clientX = e.touches[0].clientX;
-                    clientY = e.touches[0].clientY;
-                } else {
-                    clientX = e.clientX;
-                    clientY = e.clientY;
-                }
-
-                const angle =
-                    (Math.atan2(clientX - centerX, centerY - clientY) * 180) / Math.PI;
-                const clampedAngle = Math.max(-90, Math.min(90, angle));
-                needle.style.transform = `rotate(${clampedAngle}deg)`;
+        }
+        
+        function handleMove(e) {
+            if (!isDragging || !canMoveNeedle) return;
+            e.preventDefault();
+            
+            const rect = needleContainer.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            let clientX, clientY;
+            if (e.type === "touchmove") {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
             }
-
-            function handleEnd() {
-                isDragging = false;
-            }
-
-            function hideNeedle() {
-                needle.style.display = "none";
-            }
-
-            function showNeedle() {
-                needle.style.display = "block";
-            }
-
-            const modal = document.getElementById("howToPlayModal");
-            const howToPlayButton = document.getElementById("howToPlayButton");
-            const closeButton = modal.querySelector(".close-button");
-
-            howToPlayButton.onclick = function () {
-                modal.style.display = "block";
-                setTimeout(() => modal.classList.add("show"), 10);
-            }
-
-            closeButton.onclick = function () {
+            
+            // Berechne Winkel von der Mitte des Containers
+            const deltaX = clientX - centerX;
+            const deltaY = clientY - centerY;
+            const angle = Math.atan2(deltaX, -deltaY) * (180 / Math.PI);
+            
+            currentNeedleAngle = normalizeAngle(angle);
+            needle.style.transform = `translate(-50%, -100%) rotate(${currentNeedleAngle}deg)`;
+        }
+        
+        function handleEnd() {
+            isDragging = false;
+        }
+        
+        function hideNeedle() {
+            needle.style.display = "none";
+        }
+        
+        function showNeedle() {
+            needle.style.display = "block";
+        }
+        
+        const modal = document.getElementById("howToPlayModal");
+        const howToPlayButton = document.getElementById("howToPlayButton");
+        const closeButton = modal.querySelector(".close-button");
+        
+        howToPlayButton.onclick = function () {
+            modal.style.display = "block";
+            setTimeout(() => modal.classList.add("show"), 10);
+        }
+        
+        closeButton.onclick = function () {
+            modal.classList.remove("show");
+            setTimeout(() => modal.style.display = "none", 300);
+        }
+        
+        window.onclick = function (event) {
+            if (event.target == modal) {
                 modal.classList.remove("show");
                 setTimeout(() => modal.style.display = "none", 300);
             }
-
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.classList.remove("show");
-                    setTimeout(() => modal.style.display = "none", 300);
-                }
-            }
-
-            // Maus-Events
-            needleContainer.addEventListener("mousedown", handleStart);
-            document.addEventListener("mousemove", handleMove);
-            document.addEventListener("mouseup", handleEnd);
-
-            // Touch-Events
-            needleContainer.addEventListener("touchstart", handleStart);
-            document.addEventListener("touchmove", handleMove);
-            document.addEventListener("touchend", handleEnd);
-
-            toggleButton.addEventListener("click", () => {
-                isTargetVisible = !isTargetVisible;
-                targetArea.style.display = isTargetVisible ? "block" : "none";
-                if (!isTargetVisible) {
-                    toggleButton.textContent = "Ziel aufdecken";
-                    scoreElement.textContent = "";
-                    showNeedle();
-                    canMoveNeedle = true; // Nadelbewegung erlauben, wenn Ziel versteckt ist
-                } else {
-                    toggleButton.style.display = "none";
-                    const needleAngle =
-                        parseFloat(
-                            needle.style.transform.replace("rotate(", "").replace("deg)", "")
-                        ) || 0;
-                    const score = calculateScore(needleAngle);
-                    teams[currentTeamIndex].score += score;
-                    scoreElement.textContent = `${teams[currentTeamIndex].name} erzielt: ${score} Punkte`;
-                    updateScoreDisplay();
-                    canMoveNeedle = false; // Nadelbewegung deaktivieren, wenn Ziel aufgedeckt ist
-                }
-            });
-
-            nextRoundButton.addEventListener("click", () => {
-                setTargetArea();
-                setRandomClues();
-                isTargetVisible = true;
-                targetArea.style.display = "block";
-                toggleButton.textContent = "Ziel verbergen";
-                toggleButton.style.display = "inline-block";
-                needle.style.transform = "rotate(0deg)";
+        }
+        
+        needleContainer.addEventListener("mousedown", handleStart);
+        document.addEventListener("mousemove", handleMove);
+        document.addEventListener("mouseup", handleEnd);
+        
+        needleContainer.addEventListener("touchstart", handleStart, { passive: false });
+        document.addEventListener("touchmove", handleMove, { passive: false });
+        document.addEventListener("touchend", handleEnd);
+        
+        toggleButton.addEventListener("click", () => {
+            isTargetVisible = !isTargetVisible;
+            targetArea.style.display = isTargetVisible ? "block" : "none";
+            if (!isTargetVisible) {
+                toggleButton.textContent = "Ziel aufdecken";
                 scoreElement.textContent = "";
-                hideNeedle();
+                showNeedle();
+                canMoveNeedle = true;
+            } else {
+                toggleButton.style.display = "none";
+                const score = calculateScore(currentNeedleAngle);
+                teams[currentTeamIndex].score += score;
+                scoreElement.textContent = `${teams[currentTeamIndex].name} erzielt: ${score} Punkte`;
+                updateScoreDisplay();
                 canMoveNeedle = false;
-                if (teams.length > 0) {
-                    currentTeamIndex = (currentTeamIndex + 1) % teams.length;
-                    updateScoreDisplay();
-                }
-            });
-            newGameButton.addEventListener("click", () => {
-                           // confirm() gibt 'true' zurück, wenn der Benutzer "OK" klickt, und 'false' bei "Abbrechen".
-                            const userConfirmed = confirm("Bist du sicher, dass du ein neues Spiel starten möchtest? Alle Punktestände gehen verloren.");
-                            
-                           // Wenn der Benutzer bestätigt hat (auf "OK" geklickt  hat)...
-                            if (userConfirmed) {
-                               // ... wird die Seite neu geladen, um das Spiel zurückzusetzen.
-                                location.reload();
-                            }
-                           // Ansonsten (wenn der Benutzer auf "Abbrechen" klickt) passiert einfach nichts.
-                       });
-
-            // Initialisiere das Spiel
+            }
+        });
+        
+        nextRoundButton.addEventListener("click", () => {
+            hideCategories();
             setTargetArea();
-            setRandomClues();
+            setRandomCategories();
+            isTargetVisible = true;
+            targetArea.style.display = "block";
+            toggleButton.textContent = "Ziel verbergen";
+            toggleButton.style.display = "inline-block";
+            needle.style.transform = "translate(-50%, -100%) rotate(0deg)";
+            currentNeedleAngle = 0;
+            scoreElement.textContent = "";
             hideNeedle();
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+            canMoveNeedle = false;
+            
+            if (teams.length > 0) {
+                currentTeamIndex = (currentTeamIndex + 1) % teams.length;
+                updateScoreDisplay();
+            }
+            
+            // Starte Countdown bevor Kategorien angezeigt werden
+            showCountdown(() => {
+                showCategories();
+            });
+        });
+        
+        newGameButton.addEventListener("click", () => {
+            const userConfirmed = confirm("Bist du sicher, dass du ein neues Spiel starten möchtest? Alle Punktestände gehen verloren!");
+            if (userConfirmed) {
+                location.reload();
+            }
+        });
+        
+        // Initialisiere das Spiel
+        setTargetArea();
+        setRandomCategories();
+        hideNeedle();
+        hideCategories();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 </body>
 
 </html>
