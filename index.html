@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Wellenrad - Das Spiel</title>
+    <title>VibeKreis - Das Spiel</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
     <style>
@@ -28,35 +28,54 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.444);
             width: 700px;
             height: auto;
-            min-height: 730px;
+            min-height: 780px;
+            position: relative;
         }
         
-        .title {
+        .title-container {
+            position: relative;
+            height: 50px;
+            margin-bottom: 10px;
+            margin-top: -10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .hanging-title {
             font-family: "Press Start 2P", cursive;
-            font-size: 48px;
+            font-size: 28px;
             font-weight: 500;
-            color: #1c49fe;
-            text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
-            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
             letter-spacing: -2px;
             text-transform: uppercase;
+            background: linear-gradient(135deg, #9cd4f7 0%, #b03ae7 100%);
+            padding: 10px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transition: transform 0.3s ease;
+            cursor: default;
         }
         
-        .title::after {
-            content: "";
-            display: block;
-            width: 80%;
-            height: 3px;
-            margin: 10px auto 20px;
-            background: linear-gradient(to right, #f93333, #27ff5d, #9a27ff);
-            border-radius: 3px;
+        .hanging-title:hover {
+            transform: rotate(2deg) scale(1.05);
+            animation: wobble 2s ease;
+        }
+        
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-2.5eg) scale(1.02); }
+            50% { transform: rotate(2.5deg) scale(1.02); }
+            75% { transform: rotate(-2deg) scale(1.01); }
         }
         
         .board-container {
             position: relative;
             width: 400px;
             height: 400px;
-            margin: 0 auto 30px;
+            margin: 30px auto 70px;
         }
         
         .board {
@@ -134,13 +153,14 @@
         
         .category-label {
             position: absolute;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             color: #2f3542;
-            padding: 8px 12px;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 10px 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(245, 245, 245, 0.7) 100%);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
             width: 120px;
             text-align: center;
             z-index: 5;
@@ -150,37 +170,103 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 40px;
+            min-height: 45px;
+            transform: scale(0.8);
+            border: 2px solid transparent;
         }
         
         .category-label.visible {
             opacity: 1;
+            transform: scale(1);
         }
         
         .category-label.top {
-            top: -25px;
+            top: -55px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) scale(0.8);
+            border-color: #3742fa;
+            background: linear-gradient(135deg, rgba(227, 242, 255, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%);
+        }
+        
+        .category-label.top.visible {
+            transform: translateX(-50%) scale(1);
         }
         
         .category-label.right {
             top: 50%;
-            right: -25px;
+            right: -55px;
             left: auto;
-            transform: translateY(-50%);
+            transform: translateY(-50%) scale(0.8);
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, rgba(255, 227, 227, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%);
+        }
+        
+        .category-label.right.visible {
+            transform: translateY(-50%) scale(1);
         }
         
         .category-label.bottom {
-            bottom: -25px;
+            bottom: -55px;
             left: 50%;
             top: auto;
-            transform: translateX(-50%);
+            transform: translateX(-50%) scale(0.8);
+            border-color: #27ff5d;
+            background: linear-gradient(135deg, rgba(227, 255, 227, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%);
+        }
+        
+        .category-label.bottom.visible {
+            transform: translateX(-50%) scale(1);
         }
         
         .category-label.left {
             top: 50%;
-            left: -25px;
-            transform: translateY(-50%);
+            left: -55px;
+            transform: translateY(-50%) scale(0.8);
+            border-color: #feca57;
+            background: linear-gradient(135deg, rgba(255, 243, 227, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%);
+        }
+        
+        .category-label.left.visible {
+            transform: translateY(-50%) scale(1);
+        }
+        
+        .game-mode-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .mode-button {
+            padding: 10px 20px;
+            border: 2px solid #3742fa;
+            background: white;
+            color: #3742fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .mode-button.active {
+            background: #3742fa;
+            color: white;
+        }
+        
+        .mode-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(55, 66, 250, 0.3);
+        }
+        
+        .round-counter {
+            font-size: 18px;
+            color: #2f3542;
+            margin-bottom: 15px;
+            font-weight: bold;
+            padding: 8px 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: inline-block;
         }
         
         .countdown-overlay {
@@ -212,7 +298,8 @@
         }
         
         .controls {
-            margin-top: 20px;
+            margin-top: 50px;
+            margin-bottom: 25px;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
@@ -232,24 +319,26 @@
             max-width: 150px;
         }
         
-        button:hover {
+        button:hover:not(:disabled) {
             background-color: #3742fa;
         }
         
         button:disabled {
             background-color: #a4b0be;
             cursor: not-allowed;
+            opacity: 0.6;
         }
         
         #score {
-            margin-top: 20px;
+            margin-top: 15px;
+            margin-bottom: 10px;
             font-size: 18px;
             font-weight: bold;
             color: #2f3542;
         }
         
         #totalScore {
-            margin-top: 20px;
+            margin-top: 15px;
             font-size: 18px;
             font-weight: bold;
             color: #2f3542;
@@ -428,21 +517,79 @@
             margin-top: 20px;
             letter-spacing: 2px;
             background-color: #232323f4;
+            min-width: 60px;
         }
         
         .divider {
-            height: 4px;
-            width: 80%;
+            height: 5px;
+            width: 85%;
             max-width: 400px;
             margin: 15px auto;
             border: 0;
             border-radius: 2px;
             background: linear-gradient(
                 to right,
-                #949494,
-                hsl(0, 0%, 0%),
-                #949494
+                #f46457,
+                hsl(191, 88%, 70%),
+                #ff6bb5
             );
+        }
+        
+        .game-over-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+        }
+        
+        .game-over-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 10% auto;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .game-over-content h2 {
+            font-family: "Press Start 2P", cursive;
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+        }
+        
+        .final-scores {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .final-team-score {
+            font-size: 20px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .winner-highlight {
+            background: rgba(255, 215, 0, 0.3);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 5px;
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
         }
         
         /* Mobile Portrait Mode - Fullscreen */
@@ -472,37 +619,44 @@
             .needle-container {
                 width: min(85vw, 350px);
                 height: min(85vw, 350px);
+                margin-bottom: 50px;
             }
             
             .needle {
                 height: min(42.5vw, 165px);
             }
             
-            .title {
+            .hanging-title {
                 font-size: min(8vw, 32px);
+                padding: 10px 20px;
+            }
+            
+            .title-container {
+                height: 50px;
                 margin-bottom: 15px;
             }
             
             .category-label {
-                font-size: 13px;
+                font-size: 12px;
                 padding: 6px 8px;
                 width: 90px;
+                min-height: 35px;
             }
             
             .category-label.top {
-                top: -20px;
+                top: -45px;
             }
             
             .category-label.bottom {
-                bottom: -20px;
+                bottom: -45px;
             }
             
             .category-label.left {
-                left: -20px;
+                left: -45px;
             }
             
             .category-label.right {
-                right: -20px;
+                right: -45px;
             }
             
             button {
@@ -513,7 +667,8 @@
             
             .controls {
                 gap: 5px;
-                margin-top: 10px;
+                margin-top: 25px;
+                margin-bottom: 10px;
             }
             
             #score, #totalScore {
@@ -543,6 +698,16 @@
             .modal-body {
                 font-size: 13px;
             }
+            
+            .mode-button {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+            
+            .round-counter {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
         }
         
         /* Mobile Landscape Mode */
@@ -558,26 +723,53 @@
             .needle-container {
                 width: 250px;
                 height: 250px;
+                margin-bottom: 40px;
             }
             
             .needle {
                 height: 115px;
             }
             
-            .title {
+            .hanging-title {
                 font-size: 24px;
+                padding: 8px 16px;
+            }
+            
+            .title-container {
+                height: 40px;
                 margin-bottom: 10px;
             }
             
             .category-label {
-                font-size: 12px;
+                font-size: 11px;
                 padding: 4px 6px;
                 width: 80px;
+                min-height: 30px;
+            }
+            
+            .category-label.top {
+                top: -40px;
+            }
+            
+            .category-label.bottom {
+                bottom: -40px;
+            }
+            
+            .category-label.left {
+                left: -40px;
+            }
+            
+            .category-label.right {
+                right: -40px;
             }
             
             button {
                 font-size: 12px;
                 padding: 6px 12px;
+            }
+            
+            .controls {
+                margin-top: 20px;
             }
             
             #score, #totalScore {
@@ -588,6 +780,17 @@
             .team-score {
                 font-size: 12px;
                 padding: 4px 8px;
+            }
+            
+            .mode-button {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            
+            .round-counter {
+                font-size: 12px;
+                padding: 4px 8px;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -600,10 +803,10 @@
     
     <div id="howToPlayModal" class="modal">
         <div class="modal-content">
-            <h2>Wie spielt man Wellenrad?</h2>
+            <h2>Wie spielt man VibeKreis?</h2>
             <div class="modal-body">
                 <ol>
-                    <li>Vier Kategorien werden im Kreis angezeigt (oben, rechts, unten, links).</li>
+                    <li>Vier Kategorien werden um den Kreis angezeigt (oben = blau, rechts = rot, unten = grün, links = gelb).</li>
                     <li>Nach einem kurzen Countdown gibt die "Gedankenlesesende Person" einen Hinweis, 
                         wo sich das Ziel im Kreis befindet.</li>
                     <li>Das Team diskutiert und entscheidet, wohin der Zeiger gedreht wird.</li>
@@ -618,6 +821,7 @@
                             <li><span class="score-0">0 Punkte:</span> Daneben (grau)</li>
                         </ul>
                     </li>
+                    <li>Wählt zwischen Endlosspiel oder 5-Runden-Modus.</li>
                     <li>Klickt auf "Nächste Runde", um fortzufahren.</li>
                 </ol>
             </div>
@@ -625,8 +829,18 @@
         </div>
     </div>
     
+    <div id="gameOverModal" class="game-over-modal">
+        <div class="game-over-content">
+            <h2>🎉 Spielende! 🎉</h2>
+            <div class="final-scores" id="finalScores"></div>
+            <button class="close-button" onclick="location.reload()">Neues Spiel</button>
+        </div>
+    </div>
+    
     <div id="teamSetup" class="team-setup">
-        <h1 class="title"> Wellenrad </h1>
+        <div class="title-container">
+            <h1 class="hanging-title">VibeKreis</h1>
+        </div>
         <h2>
             Sprache: <img src="https://flagcdn.com/de.svg" width="35" alt="Germany">
         </h2>
@@ -639,12 +853,20 @@
         <div class="count-error-message" id="countErrorMessage"></div>
         <div id="teamNames"></div>
         <div class="error-message" id="errorMessage"></div>
+        <h4>Spielmodus</h4>
+        <div class="game-mode-selector">
+            <button class="mode-button active" data-mode="endless">Endlos</button>
+            <button class="mode-button" data-mode="rounds">5 Runden</button>
+        </div>
         <button id="startGame">Spiel starten</button>
-        <button id="howToPlayButton" class="how-to-play">Anleitung</button>
+        <button id="howToPlayButton" class="how-to-play">?</button>
     </div>
     
     <div class="game-container" style="display: none;">
-        <h1 class="title">Wellenrad</h1>
+        <div class="title-container">
+            <h1 class="hanging-title">VibeKreis</h1>
+        </div>
+        <div class="round-counter" id="roundCounter" style="display: none;">Runde: 1 / 5</div>
         <div class="board-container">
             <div class="board">
                 <div class="target-area" id="targetArea"></div>
@@ -662,7 +884,7 @@
         </div>
         <div class="controls">
             <button id="toggleButton">Ziel verbergen</button>
-            <button id="nextRoundButton">Nächste Runde</button>
+            <button id="nextRoundButton" style="display: none;">Nächste Runde</button>
             <button id="newGameButton" style="background-color: rgba(208, 36, 36, 0.822); color: white">
                 Neues Spiel
             </button>
@@ -684,37 +906,40 @@
         const countdownNumber = document.getElementById("countdownNumber");
         const errorMessageElement = document.getElementById("errorMessage");
         const countErrorMessageElement = document.getElementById("countErrorMessage");
+        const roundCounter = document.getElementById("roundCounter");
+        const gameOverModal = document.getElementById("gameOverModal");
+        const finalScoresDiv = document.getElementById("finalScores");
         
         // Kategorien-Elemente
-            const topCategory = document.getElementById("topCategory");
-            const rightCategory = document.getElementById("rightCategory");
-            const bottomCategory = document.getElementById("bottomCategory");
-            const leftCategory = document.getElementById("leftCategory");
-            
-            let isDragging = false;
-            let targetAngle = 0;
-            let isTargetVisible = true;
-            let totalScore = 0;
-            let canMoveNeedle = false;
-            let currentNeedleAngle = 0;
-            const bannedWords = [
-            // Rassistische Begriffe
+        const topCategory = document.getElementById("topCategory");
+        const rightCategory = document.getElementById("rightCategory");
+        const bottomCategory = document.getElementById("bottomCategory");
+        const leftCategory = document.getElementById("leftCategory");
+        
+        let isDragging = false;
+        let targetAngle = 0;
+        let isTargetVisible = true;
+        let totalScore = 0;
+        let canMoveNeedle = false;
+        let currentNeedleAngle = 0;
+        let gameMode = 'endless';
+        let currentRound = 1;
+        let currentTurn = 0;
+        let maxRounds = 5;
+        let usedCategories = new Set();
+        let isFirstRound = true;
+        
+        const bannedWords = [
             'nigger', 'nigga', 'neger', 'n+[i1!]+[g9]+', 'n.{0,2}[i1!].{0,2}[g9].{0,2}[g9]',
-            // NS-Bezüge
             'hitler', 'h[i1!]tl[e3]r', 'nazi', 'n[a4]z[i1!]', 'heil', 'nsdap', 'führer', 'adolf',
-            // Andere offensive Begriffe
             'hurensohn', 'hure', 'fotze', 'f[o0]tz[e3]', 'schlampe', 'missgeburt',
             'spast', 'sp[a4]st', 'behindert', 'mongo', 'mongol', 'schwuchtel', 'faggot', 'f[a4]gg[o0]t','fag', 'f[a4]g',
-            // Religiöse oder Ethnische Beleidigungen
-            'judensau', 'jud[e3]ns[a4]u', 'zigeuner'];
+            'judensau', 'jud[e3]ns[a4]u', 'zigeuner'
+        ];
             
         function isNameBanned(name) {
             const lowerName = name.toLowerCase().trim();
-            
-            // Entferne Leerzeichen, Sonderzeichen für bessere Erkennung
             const cleanedName = lowerName.replace(/[\s\-_\.]/g, '');
-            
-            // Ersetze Leetspeak-Zahlen für zusätzliche Prüfung der Banned Names
             const decodedName = cleanedName
                 .replace(/0/g, 'o')
                 .replace(/1/g, 'i')
@@ -726,15 +951,11 @@
             
             return bannedWords.some(banned => {
                 try {
-                    // Erstelle RegEx Pattern für Banned Words, damit ein paar Varianten erkannt werden
                     const pattern = new RegExp(banned, 'i');
-                    
-                    // Teste gegen alle Varianten so gut es geht
                     return pattern.test(lowerName) || 
                             pattern.test(cleanedName) ||
                             pattern.test(decodedName);
                 } catch (e) {
-                    // Fallback für ungültige RegEx
                     return lowerName.includes(banned) || 
                             cleanedName.includes(banned) ||
                             decodedName.includes(banned);
@@ -742,20 +963,19 @@
             });
         }
             
-            function checkForDuplicateNames() {
-                const inputs = Array.from(teamNames.children);
-                const names = inputs.map(input => input.value.toLowerCase().trim()).filter(name => name);
-                const uniqueNames = new Set(names);
-                return names.length !== uniqueNames.size;
-            }
+        function checkForDuplicateNames() {
+            const inputs = Array.from(teamNames.children);
+            const names = inputs.map(input => input.value.toLowerCase().trim()).filter(name => name);
+            const uniqueNames = new Set(names);
+            return names.length !== uniqueNames.size;
+        }
             
-        // Hilfsfunktion um Winkel zu normalisieren für den ganzen Kreis (0-360)
         function normalizeAngle(angle) {
             angle = angle % 360;
             if (angle < 0) angle += 360;
             return angle;
         }
-                // Erweiterte und bereinigte Kategorien-Liste für 4 Richtungen
+        
         const categories = [
             ["Kalt", "Heiß", "Trocken", "Feucht"],
             ["Langweilig", "Aufregend", "Entspannend", "Stressig"],
@@ -853,8 +1073,6 @@
             ["Verantwortungsbewusst", "Verantwortungslos", "Pflichtbewusst", "Leichtsinnig"],
             ["Team-Player*in", "Einzelkämpfer*in", "Kooperativ", "Kompetitiv"],
             ["Führungspersönlichkeit", "Mitläufer*in", "Autoritär", "Demokratisch"],
-
-            // Abstrakte & Philosophische Konzepte
             ["Eine gute Tat", "Eine böse Tat", "Eine notwendige Tat", "Eine nutzlose Tat"],
             ["Wissen", "Glaube", "Meinung", "Fakt"],
             ["Freiheit", "Sicherheit", "Ordnung", "Chaos"],
@@ -863,16 +1081,12 @@
             ["Vergangenheit", "Zukunft", "Gegenwart", "Alternative Zeitlinie"],
             ["Eine unterschätzte Idee", "Eine überschätzte Idee", "Eine gefährliche Idee", "Eine geniale Idee"],
             ["Wahrheit", "Lüge", "Geheimnis", "Gerücht"],
-
-            // Popkultur & Medien
             ["Blockbuster", "Indie-Film", "Dokumentation", "Kurzfilm"],
             ["Ohrwurm", "Vergessenswerter Song", "Guilty Pleasure", "Klassiker"],
             ["Gutes Meme", "Cringe Meme", "Totes Meme", "Insider-Witz"],
             ["Gute Buchverfilmung", "Schlechte Buchverfilmung", "Besser als das Buch", "Unverfilmbar"],
             ["50er-Nostalgie", "90er-Nostalgie", "2000er-Nostalgie", "Zukunfts-Hype"],
             ["So schlecht, dass es gut ist", "Unfreiwillig komisch", "Einfach nur schlecht", "Meisterwerk"],
-
-            // Absurde & Lustige Kombinationen
             ["Ist ein Sandwich?", "Ist eine Suppe?", "Ist ein Salat?", "Ist ein Verbrechen?"],
             ["Riecht besser als es schmeckt", "Schmeckt besser als es riecht", "Sieht gut aus", "Klingt gut"],
             ["Guter Ort für ein Nickerchen", "Schlechter Ort für ein Nickerchen", "Ort zum Verstecken", "Ort für eine Party"],
@@ -881,8 +1095,6 @@
             ["Eine Aktion einer Katze", "Eine Aktion eines Hundes", "Eine Aktion eines Menschen", "Eine Aktion einer KI"],
             ["Sollte illegal sein", "Sollte Pflicht sein", "Ist legal", "Ist eine Grauzone"],
             ["Etwas, das man flüstert", "Etwas, das man schreit", "Etwas, das man singt", "Etwas, das man denkt"],
-            
-            // Gemischte Konzepte
             ["Kopfentscheidung", "Bauchentscheidung", "Herzentscheidung", "Zufallsentscheidung"],
             ["Temporär", "Permanent", "Zyklisch", "Einmalig"],
             ["Fertigkeit", "Talent", "Wissen", "Glück"],
@@ -900,7 +1112,6 @@
         ];
         
         categories.forEach((quad) => {
-            // Mische die 4 Kategorien zufällig
             for (let i = quad.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [quad[i], quad[j]] = [quad[j], quad[i]];
@@ -916,18 +1127,25 @@
         let teams = [];
         let currentTeamIndex = 0;
         
+        // Game mode selection
+        document.querySelectorAll('.mode-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.mode-button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                gameMode = this.dataset.mode;
+            });
+        });
+        
         teamCount.addEventListener('change', updateTeamInputs);
         teamCount.addEventListener('input', updateTeamInputs);
         
         function updateTeamInputs() {
             const count = parseInt(teamCount.value);
             
-            // Reset error state
             teamCount.classList.remove('error');
             countErrorMessageElement.classList.remove('show');
             countErrorMessageElement.textContent = '';
             
-            // Stelle sicher, dass der Wert zwischen 1 und 4 liegt
             if (count < 1 || isNaN(count)) {
                 teamCount.classList.add('error');
                 countErrorMessageElement.textContent = 'Bitte wähle mindestens 1 Team.';
@@ -968,11 +1186,46 @@
             totalScoreElement.innerHTML = scoreHTML;
         }
         
+        function updateRoundCounter() {
+            if (gameMode === 'rounds') {
+                roundCounter.style.display = 'inline-block';
+                roundCounter.textContent = `Runde: ${currentRound} / ${maxRounds}`;
+            } else {
+                roundCounter.style.display = 'none';
+            }
+        }
+        
+        function showGameOver() {
+            const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
+            const highestScore = sortedTeams[0].score;
+            const winners = sortedTeams.filter(team => team.score === highestScore);
+            
+            let scoresHTML = sortedTeams.map((team) => {
+                const isWinner = team.score === highestScore;
+                return `<div class="final-team-score ${isWinner ? 'winner-highlight' : ''}">
+                    ${isWinner ? '🏆 ' : ''}${team.name}: ${team.score} Punkte
+                </div>`;
+            }).join('');
+            
+            finalScoresDiv.innerHTML = scoresHTML;
+            gameOverModal.style.display = 'block';
+            
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 200,
+                    spread: 120,
+                    origin: { y: 0.4 },
+                    colors: ['#FFD700', '#feca57', '#3742fa', '#ff6b6b'],
+                    ticks: 400,
+                    gravity: 0.6
+                });
+            }
+        }
+        
         function showCountdown(callback) {
             let count = 3;
             countdownOverlay.style.display = 'flex';
             
-            // Verstecke das Ziel während des Countdowns
             targetArea.classList.add('hidden-for-countdown');
             
             const interval = setInterval(() => {
@@ -986,7 +1239,6 @@
                 } else {
                     clearInterval(interval);
                     countdownOverlay.style.display = 'none';
-                    // Zeige das Ziel wieder nach dem Countdown
                     targetArea.classList.remove('hidden-for-countdown');
                     callback();
                 }
@@ -1011,12 +1263,10 @@
         }
         
         startGameButton.addEventListener('click', () => {
-            // Reset error states
             errorMessageElement.classList.remove('show');
             errorMessageElement.textContent = '';
             Array.from(teamNames.children).forEach(input => input.classList.remove('error'));
             
-            // Check if team count is valid
             const count = parseInt(teamCount.value);
             if (count < 1 || count > 4 || isNaN(count)) {
                 teamCount.classList.add('error');
@@ -1025,10 +1275,8 @@
                 return;
             }
             
-            // Check for banned words
             const inputs = Array.from(teamNames.children);
             let hasBannedWords = false;
-            let hasDuplicates = false;
             
             inputs.forEach(input => {
                 if (input.value && isNameBanned(input.value)) {
@@ -1043,7 +1291,6 @@
                 return;
             }
             
-            // Check for duplicates
             if (checkForDuplicateNames()) {
                 errorMessageElement.textContent = 'Jedes Team muss einen einzigartigen Namen haben.';
                 errorMessageElement.classList.add('show');
@@ -1062,41 +1309,68 @@
                 score: 0
             }));
             
+            currentRound = 1;
+            currentTurn = 0;
+            isFirstRound = true;
+            usedCategories.clear();
+            
             teamSetup.style.display = 'none';
             gameContainer.style.display = 'block';
             updateScoreDisplay();
+            
+            // Start first round immediately
             nextRoundButton.click();
         });
         
         updateTeamInputs();
         
         function setTargetArea() {
-        targetAngle = Math.random() * 360;
+            targetAngle = Math.random() * 360;
             
-        // Create a fixed gradient centered at 180°
-        const gradient = `conic-gradient(
-            from ${targetAngle - 180}deg at 50% 50%,
-            #a4b0be 0deg,
-            #a4b0be 160deg,
-            #ff6b6b 160deg,
-            #ff6b6b 172deg,
-            #3742fa 172deg,
-            #3742fa 178deg,
-            #FFD700 178deg,
-            #FFD700 182deg,
-            #3742fa 182deg,
-            #3742fa 188deg,
-            #ff6b6b 188deg,
-            #ff6b6b 200deg,
-            #a4b0be 200deg,
-            #a4b0be 360deg
-        )`;
+            const gradient = `conic-gradient(
+                from ${targetAngle - 180}deg at 50% 50%,
+                #a4b0be 0deg,
+                #a4b0be 160deg,
+                #ff6b6b 160deg,
+                #ff6b6b 172deg,
+                #3742fa 172deg,
+                #3742fa 178deg,
+                #FFD700 178deg,
+                #FFD700 182deg,
+                #3742fa 182deg,
+                #3742fa 188deg,
+                #ff6b6b 188deg,
+                #ff6b6b 200deg,
+                #a4b0be 200deg,
+                #a4b0be 360deg
+            )`;
             
-        targetArea.style.background = gradient;
-    }
+            targetArea.style.background = gradient;
+        }
         
         function setRandomCategories() {
-            const randomIndex = Math.floor(Math.random() * categories.length);
+            let randomIndex;
+            let attempts = 0;
+            const maxAttempts = categories.length;
+            
+            // Wenn alle Kategorien verwendet wurden, setze zurück
+            if (usedCategories.size >= categories.length) {
+                usedCategories.clear();
+            }
+            
+            // Finde eine unbenutzte Kategorie
+            do {
+                randomIndex = Math.floor(Math.random() * categories.length);
+                attempts++;
+                if (attempts >= maxAttempts) {
+                    // Fallback: Wenn keine unbenutzten gefunden werden, setze zurück
+                    usedCategories.clear();
+                    break;
+                }
+            } while (usedCategories.has(randomIndex));
+            
+            usedCategories.add(randomIndex);
+            
             const [top, right, bottom, left] = categories[randomIndex];
             topCategory.textContent = top;
             rightCategory.textContent = right;
@@ -1105,15 +1379,12 @@
         }
         
         function calculateScore(angle) {
-            // Normalisiere beide Winkel auf 0-360
             const normalizedTarget = normalizeAngle(targetAngle);
             const normalizedNeedle = normalizeAngle(angle);
             
-            // Berechne die kürzeste Winkeldifferenz
             let diff = Math.abs(normalizedTarget - normalizedNeedle);
             if (diff > 180) diff = 360 - diff;
             
-            // Feste Größenunterschiede
             if (diff <= 2) {
                 triggerConfetti();
                 return 5;
@@ -1161,7 +1432,6 @@
                 clientY = e.clientY;
             }
             
-            // Berechne Winkel von der Mitte des Containers
             const deltaX = clientX - centerX;
             const deltaY = clientY - centerY;
             const angle = Math.atan2(deltaX, -deltaY) * (180 / Math.PI);
@@ -1219,6 +1489,7 @@
                 scoreElement.textContent = "";
                 showNeedle();
                 canMoveNeedle = true;
+                nextRoundButton.style.display = "none";  // Hide next round button
             } else {
                 toggleButton.style.display = "none";
                 const score = calculateScore(currentNeedleAngle);
@@ -1226,10 +1497,29 @@
                 scoreElement.textContent = `${teams[currentTeamIndex].name} erzielt: ${score} Punkte`;
                 updateScoreDisplay();
                 canMoveNeedle = false;
+                nextRoundButton.style.display = "inline-block";  // Show next round button after revealing
             }
         });
         
         nextRoundButton.addEventListener("click", () => {
+            // Don't increment currentTurn on the very first round
+            if (!isFirstRound) {
+                currentTurn++;
+            }
+            isFirstRound = false;
+            
+            if (gameMode === 'rounds' && teams.length > 0) {
+                // Check if all teams have played this round
+                if (currentTurn > 0 && currentTurn % teams.length === 0) {
+                    currentRound++;
+                    if (currentRound > maxRounds) {
+                        showGameOver();
+                        return;
+                    }
+                }
+                updateRoundCounter();
+            }
+            
             hideCategories();
             setTargetArea();
             setRandomCategories();
@@ -1242,13 +1532,13 @@
             scoreElement.textContent = "";
             hideNeedle();
             canMoveNeedle = false;
+            nextRoundButton.style.display = "none";  // Hide next round button for new round
             
             if (teams.length > 0) {
                 currentTeamIndex = (currentTeamIndex + 1) % teams.length;
                 updateScoreDisplay();
             }
             
-            // Starte Countdown bevor Kategorien angezeigt werden
             showCountdown(() => {
                 showCategories();
             });
@@ -1261,7 +1551,6 @@
             }
         });
         
-        // Initialisiere das Spiel
         setTargetArea();
         setRandomCategories();
         hideNeedle();
