@@ -181,7 +181,7 @@
         }
         
         .category-label.top {
-            top: -40px;
+            top: -30px;
             left: 50%;
             transform: translateX(-50%) scale(0.8);
             border-color: #3742fa;
@@ -208,7 +208,7 @@
         }
         
         .category-label.bottom {
-            bottom: -40px;
+            bottom: -30px;
             left: 50%;
             top: auto;
             transform: translateX(-50%) scale(0.8);
@@ -389,16 +389,38 @@
             text-align: center;
         }
         
-        .team-count {
-            margin-bottom: 1rem;
+        #teamCount {
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 40px;
+            margin-left: 10px;
+        }
+        
+        #teamCount:hover {
+            border-color: #3742fa;
+        }
+        
+        #teamCount:focus {
+            outline: none;
+            border-color: #3742fa;
+            box-shadow: 0 0 0 3px rgba(55, 66, 250, 0.1);
         }
         
         .team-name-input {
-            margin-bottom: 0.5rem;
-            padding: 8px;
-            width: 80%;
+            margin: 0.5rem auto;
+            padding: 8px 10px;
+            width: 300px;
+            max-width: 90vw;
+            display: block;
             border: 1px solid #ddd;
             border-radius: 5px;
+            text-align: center;
+            font-size: 15px;
         }
         
         .team-name-input.error {
@@ -637,7 +659,8 @@
             
             .title-container {
                 height: 50px;
-                margin-bottom: 15px;
+                margin-bottom: 20px;
+                margin-top: -5px;
             }
             
             .category-label {
@@ -648,23 +671,23 @@
             }
             
             .category-label.top {
-                top: -35px;
+                top: -25px;
             }
             
             .category-label.bottom {
-                bottom: -35px;
+                bottom: -25px;
             }
             
             .category-label.left {
-                left: -35px;
+                left: -30px;
             }
             
             .category-label.right {
-                right: -35px;
+                right: -30px;
             }
             
             button {
-                font-size: 14px;
+                font-size: 12px;
                 padding: 10px 15px;
                 max-width: 30%;
             }
@@ -752,20 +775,21 @@
             }
             
             .category-label.top {
-                top: -40px;
+                top: -25px;
             }
             
             .category-label.bottom {
-                bottom: -40px;
+                bottom: -25px;
             }
             
             .category-label.left {
-                left: -40px;
+                left: -30px;
             }
             
             .category-label.right {
-                right: -40px;
+                right: -30px;
             }
+            
             
             button {
                 font-size: 12px;
@@ -835,7 +859,7 @@
     
     <div id="gameOverModal" class="game-over-modal">
         <div class="game-over-content">
-            <h2>🎉 Spielende! 🎉</h2>
+            <h2>Spielende! 🎉</h2>
             <div class="final-scores" id="finalScores"></div>
             <button class="close-button" onclick="location.reload()">Neues Spiel</button>
         </div>
@@ -851,8 +875,13 @@
         <h3 class="divider"></h3>
         <h4>Teameinstellung</h4>
         <div class="team-count">
-            <label for="teamCount">Anzahl der Teams (1-4):</label>
-            <input type="number" id="teamCount" min="1" max="4" value="1">
+            <label for="teamCount">Anzahl der Teams:</label>
+            <select id="teamCount">
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
         </div>
         <div class="count-error-message" id="countErrorMessage"></div>
         <div id="teamNames"></div>
@@ -1174,7 +1203,38 @@
             ["Metaverse", "Desinfektionsmittel", "Mute-Button", "Among Us"],
             ["ChatGPT", "Impfung", "Webcam", "Squid Game"],
             ["BeReal", "PCR-Test", "Pyjama-Hose", "Wordle"],
-            ["Threads", "Lockdown", "Zoom-Fatigue", "Dalgona-Kaffee"]
+            ["Threads", "Lockdown", "Zoom-Fatigue", "Dalgona-Kaffee"],
+            ["Smartphone", "Buch", "Kaffeemaschine", "Kopfhörer"],
+            ["Festival", "Konferenz", "Familienfeier", "Erster Schultag"],
+            ["Selfie", "Spiegel", "Filter", "Realität"],
+            ["Homeoffice", "Großraumbüro", "Coworking Space", "Café"],
+            ["Online-Dating", "Real-Life-Date", "Ghosting", "Langzeitbeziehung"],
+            ["Influencer", "Wissenschaftler*in", "Politiker*in", "Comedian"],
+            ["E-Scooter", "Fahrrad", "Auto", "Zug"],
+            ["Bergurlaub", "Strandurlaub", "Städtereise", "Zuhause bleiben"],
+            ["Regen", "Sonne", "Schnee", "Wind"],
+            ["Kunst", "Sport", "Wissenschaft", "Mode"],
+            ["Start-up", "Behörde", "Konzern", "Familienbetrieb"],
+            ["Science-Fiction", "Fantasy", "Krimi", "Romantik"],
+            ["Reality-TV", "Dokumentation", "Comedyshow", "Nachrichten"],
+            ["Nachbar*in", "Kolleg*in", "Freund*in", "Familienmitglied"],
+            ["Kaum zu glauben", "Selbstverständlich", "Fragwürdig", "Unverständlich"],
+            ["Zukunftsvision", "Erinnerung", "Alltag", "Albtraum"],
+            ["Perfektion", "Chaos", "Improvisation", "Kreativität"],
+            ["Pizza", "Rakete", "Kissen", "Dinosaurier"],
+            ["Banane", "Fahrrad", "Wolke", "Socke"],
+            ["Käse", "Hubschrauber", "Regenschirm", "Gitarre"],
+            ["Kaktus", "Laptop", "Seife", "Pinguin"],
+            ["Toaster", "Einhorn", "Ketchup", "Mondschein"],
+            ["Glitzer", "Kartoffel", "Skateboard", "Vampir"],
+            ["Konfetti", "Brokkoli", "Raumschiff", "Schlafanzug"],
+            ["Nudeln", "Drache", "Wecker", "Regenbogen"],
+            ["Kaugummi", "Leuchtturm", "Avocado", "Trampolin"],
+            ["Wassermelone", "Zauberstab", "Staubsauger", "Flamingo"],
+            ["Glühbirne", "Ananas", "Rollschuhe", "Krake"],
+            ["Sushi", "Bumerang", "Kühlschrank", "Meerjungfrau"],
+            ["Cookie", "Zeitmaschine", "Bleistift", "Zombie"],
+            ["Donut", "Jetpack", "Zahnbürste", "Ninja"]
         ];
         
         const teamSetup = document.getElementById('teamSetup');
@@ -1377,34 +1437,53 @@
             gameContainer.style.display = 'block';
             updateScoreDisplay();
             
-            // Start first round immediately
+            // Beginne mit der ersten Runde sofort
             nextRoundButton.click();
         });
         
         updateTeamInputs();
         
         function setTargetArea() {
-            targetAngle = Math.random() * 360;
-            
-            const gradient = `conic-gradient(
-                from ${targetAngle - 180}deg at 50% 50%,
-                #a4b0be 0deg,
-                #a4b0be 160deg,
-                #ff6b6b 160deg,
-                #ff6b6b 172deg,
-                #3742fa 172deg,
-                #3742fa 178deg,
-                #FFD700 178deg,
-                #FFD700 182deg,
-                #3742fa 182deg,
-                #3742fa 188deg,
-                #ff6b6b 188deg,
-                #ff6b6b 200deg,
-                #a4b0be 200deg,
-                #a4b0be 360deg
+          targetAngle = Math.random() * 360;
+        
+          // Halbe Breite, die FAST "calculateScore" matched
+          const ring5 = 3;   // gold
+          const ring3 = 12; // blue
+          const ring1 = 28;  // red
+                
+        const gradient = `conic-gradient(
+            from ${targetAngle - 180}deg at 50% 50%,
+                
+            /* gray background until outer red zone */
+            #a4b0be 0deg,
+            #a4b0be ${180 - ring1}deg,
+                
+            /* red zone  */
+            #ff6b6b ${180 - ring1}deg,
+            #ff6b6b ${180 - ring3}deg,
+                
+            /* blue zone */
+            #3742fa ${180 - ring3}deg,
+            #3742fa ${180 - ring5}deg,
+                
+            /* gold zone  */
+            #FFD700 ${180 - ring5}deg,
+            #FFD700 ${180 + ring5}deg,
+                
+            /* mirror blue */
+            #3742fa ${180 + ring5}deg,
+            #3742fa ${180 + ring3}deg,
+                
+            /* mirror red */
+            #ff6b6b ${180 + ring3}deg,
+            #ff6b6b ${180 + ring1}deg,
+                
+            /* back to gray background */
+            #a4b0be ${180 + ring1}deg,
+            #a4b0be 360deg
             )`;
-            
-            targetArea.style.background = gradient;
+                
+        targetArea.style.background = gradient;
         }
         
         function setRandomCategories() {
@@ -1443,13 +1522,13 @@
             
             let diff = Math.abs(normalizedTarget - normalizedNeedle);
             if (diff > 180) diff = 360 - diff;
-            
-            if (diff <= 3) {
+            // Make the score a bit bigger so it seems like you can get scores out side of the are (Ja ist von mir)
+            if (diff <= 3.1) {
                 triggerConfetti();
                 return 5;
             }
-            if (diff <= 14) return 3;
-            if (diff <= 38) return 1;
+            if (diff <= 12.2) return 3;
+            if (diff <= 28.3) return 1;
             return 0;
         }
         
