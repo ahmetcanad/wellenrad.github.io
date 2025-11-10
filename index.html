@@ -28,15 +28,15 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.444);
             width: 700px;
             height: auto;
-            min-height: 780px;
+            min-height: 700px;
             position: relative;
         }
         
         .title-container {
             position: relative;
             height: 50px;
-            margin-bottom: 10px;
-            margin-top: -10px;
+            margin-bottom: 30px;
+            margin-top: -20px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -153,7 +153,7 @@
         
         .category-label {
             position: absolute;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             color: #2f3542;
             padding: 10px 12px;
@@ -181,11 +181,12 @@
         }
         
         .category-label.top {
-            top: -55px;
+            top: -35px;
             left: 50%;
             transform: translateX(-50%) scale(0.8);
             border-color: #3742fa;
             background: linear-gradient(135deg, rgba(227, 242, 255, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%);
+            opacity: 0.9;
         }
         
         .category-label.top.visible {
@@ -194,11 +195,12 @@
         
         .category-label.right {
             top: 50%;
-            right: -55px;
+            right: -50px;
             left: auto;
             transform: translateY(-50%) scale(0.8);
             border-color: #ff6b6b;
             background: linear-gradient(135deg, rgba(255, 227, 227, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%);
+            opacity: 0.9;
         }
         
         .category-label.right.visible {
@@ -206,12 +208,13 @@
         }
         
         .category-label.bottom {
-            bottom: -55px;
+            bottom: -35px;
             left: 50%;
             top: auto;
             transform: translateX(-50%) scale(0.8);
             border-color: #27ff5d;
             background: linear-gradient(135deg, rgba(227, 255, 227, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%);
+            opacity: 0.9;
         }
         
         .category-label.bottom.visible {
@@ -220,10 +223,11 @@
         
         .category-label.left {
             top: 50%;
-            left: -55px;
+            left: -50px;
             transform: translateY(-50%) scale(0.8);
             border-color: #feca57;
             background: linear-gradient(135deg, rgba(255, 243, 227, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%);
+            opacity: 0.9;
         }
         
         .category-label.left.visible {
@@ -615,25 +619,25 @@
             
             .board-container,
             .board,
-            .target-area,
-            .needle-container {
-                width: min(85vw, 350px);
-                height: min(85vw, 350px);
-                margin-bottom: 50px;
+            .target-area,.needle-container {
+                  width: min(75vw, 300px);  /* Changed from 85vw, 350px */
+                  height: min(75vw, 300px);  /* Changed from 85vw, 350px */
+                  margin-bottom: 30px;  /* Changed from 50px */
             }
             
             .needle {
-                height: min(42.5vw, 165px);
+                height: min(37.5vw, 140px);  /* Adjusted proportionally */
             }
             
             .hanging-title {
-                font-size: min(8vw, 32px);
+                font-size: min(6vw, 28px);
                 padding: 10px 20px;
             }
             
             .title-container {
                 height: 50px;
-                margin-bottom: 15px;
+                margin-bottom: 20px;
+                margin-top: -10px;
             }
             
             .category-label {
@@ -644,23 +648,23 @@
             }
             
             .category-label.top {
-                top: -45px;
+                top: -55px;
             }
             
             .category-label.bottom {
-                bottom: -45px;
+                bottom: -55px;
             }
             
             .category-label.left {
-                left: -45px;
+                left: -55px;
             }
             
             .category-label.right {
-                right: -45px;
+                right: -55px;
             }
             
             button {
-                font-size: 14px;
+                font-size: 12px;
                 padding: 10px 15px;
                 max-width: 30%;
             }
@@ -1013,7 +1017,6 @@
             ["Seriös", "Lustig", "Ernst", "Albern"],
             ["Professionell", "Amateurhaft", "Experte*in", "Anfänger*in"],
             ["Urban", "Ländlich", "Vorstädtisch", "Wildnis"],
-            ["Tag", "Nacht", "Dämmerung", "Mittag"],
             ["Sommer", "Winter", "Frühling", "Herbst"],
             ["Nord", "Süd", "Ost", "West"],
             ["Himmel", "Erde", "Wasser", "Feuer"],
@@ -1055,7 +1058,6 @@
             ["Reiselustig", "Heimatverbunden", "Backpacker*in", "Luxus-Urlauber*in"],
             ["Koch-Künstler*in", "Lieferdienst-König*in", "Hobby-Bäcker*in", "Mikrowellen-Magier*in"],
             ["Umweltbewusst", "Konsum-Enthusiast*in", "Zero-Waste-Held*in", "Verpackungs-Liebhaber*in"],
-            ["Handwerklich begabt", "Zwei linke Hände", "DIY-König*in", "Reparatur-Muffel"],
             ["Gamer*in", "Brettspiel-Fan", "Social-Media-Star", "Digital-Detox-Anhänger*in"],
             ["Qualitätsbewusst", "Schnäppchen-Jäger*in", "Markentreu", "No-Name-Fan"],
             ["Planungs-Fanatiker*in", "Spontaneitäts-Künstler*in", "To-Do-Listen-Gott", "YOLO-Mentalität"],
@@ -1108,7 +1110,72 @@
             ["Ein Wort, das klug klingt", "Ein Wort, das dumm klingt", "Ein Schimpfwort", "Ein Kosewort"],
             ["Ein Job für eine Maschine", "Ein Job für eine*n Künstler*in", "Ein Job für eine*n Politiker*in", "Ein Job, den es nicht mehr gibt"],
             ["Ein Ort, an dem man allein sein will", "Ein Ort für eine riesige Party", "Ein geheimer Ort", "Ein überfüllter Ort"],
-            ["Eine Regel, die man brechen sollte", "Eine Regel, die man befolgen sollte", "Eine ungeschriebene Regel", "Eine dumme Regel"]
+            ["Eine Regel, die man brechen sollte", "Eine Regel, die man befolgen sollte", "Eine ungeschriebene Regel", "Eine dumme Regel"],
+            
+            // Haha random Kategorien und wie gut klappt das?
+            ["Pizza", "Rakete", "Kissen", "Dinosaurier"],
+            ["Banane", "Fahrrad", "Wolke", "Socke"],
+            ["Käse", "Hubschrauber", "Regenschirm", "Gitarre"],
+            ["Kaktus", "Laptop", "Seife", "Pinguin"],
+            ["Toaster", "Einhorn", "Ketchup", "Mondschein"],
+            ["Glitzer", "Kartoffel", "Skateboard", "Vampire"],
+            ["Konfetti", "Brokkoli", "Raumschiff", "Pantoffel"],
+            ["Nudeln", "Drache", "Wecker", "Regenbogen"],
+            ["Popcorn", "Roboter", "Handtuch", "Geister"],
+            ["Kaugummi", "Leuchtturm", "Avocado", "Trampolin"],
+            ["Wassermelone", "Zauberstab", "Staubsauger", "Flamingo"],
+            ["Luftballon", "Burrito", "Teleskop", "Yeti"],
+            ["Glühbirne", "Ananas", "Rollschuhe", "Kraken"],
+            ["Donut", "Jetpack", "Zahnbürste", "Ninja"],
+            ["Sushi", "Bumerang", "Kühlschrank", "Meerjungfrau"],
+            ["Muffin", "Helikopter", "Radiergummi", "Wikinger"],
+            ["Popcorn", "U-Boot", "Klopapier", "Astronaut"],
+            ["Waffel", "Drohne", "Shampoo", "Pirat"],
+            ["Cookie", "Zeitmaschine", "Bleistift", "Zombie"],
+            ["Chips", "Katapult", "Spiegel", "Elfe"],
+            ["Brezel", "Hoverboard", "Zahnpasta", "Cowboy"],
+            ["Marshmallow", "Portal", "Handschuhe", "Detektiv"],
+            ["Gummibärchen", "Laserkanone", "Kissen", "Samurai"],
+            ["Schokolade", "Teleporter", "Seifenblase", "Zauberer"],
+            ["Internet", "Kartoffelsalat", "Discokugel", "T-Rex"],
+            ["Bitcoin", "Knoblauch", "Lavalampe", "Sherlock Holmes"],
+            ["TikTok", "Basilikum", "Hängematte", "Godzilla"],
+            ["Podcast", "Mayonnaise", "Boombox", "Harry Potter"],
+            ["Emoji", "Zimt", "Gameboy", "Batman"],
+            ["Hashtag", "Senf", "Walkman", "Spiderman"],
+            ["Meme", "Paprika", "Schallplatte", "Gandalf"],
+            ["Selfie", "Curry", "Kassette", "Dumbledore"],
+            ["Stream", "Wasabi", "Diskette", "Darth Vader"],
+            ["Download", "Tabasco", "Polaroid", "Joker"],
+            ["Update", "Pfeffer", "Videokassette", "Iron Man"],
+            ["Cloud", "Salz", "CD-Player", "Hulk"],
+            ["Swipe", "Zucker", "iPod", "Thor"],
+            ["Like", "Essig", "Pager", "Captain America"],
+            ["Story", "Öl", "Fax", "Wonder Woman"],
+            ["Feed", "Butter", "Modem", "Superman"],
+            ["Montag", "Giraffe", "Klebeband", "Vulkan"],
+            ["Dienstag", "Elefant", "Büroklammer", "Tornado"],
+            ["Mittwoch", "Koala", "Heftgerät", "Blitz"],
+            ["Donnerstag", "Panda", "Locher", "Regenbogen"],
+            ["Freitag", "Zebra", "Textmarker", "Aurora"],
+            ["Samstag", "Löwe", "Post-it", "Komet"],
+            ["Sonntag", "Tiger", "Tesafilm", "Meteror"],
+            ["Januar", "Adler", "Kugelschreiber", "Galaxie"],
+            ["Dezember", "Hai", "Füller", "Schwarzes Loch"],
+            ["Ostern", "Delfin", "Bleistift", "Supernova"],
+            ["Weihnachten", "Wal", "Edding", "Milchstraße"],
+            ["Halloween", "Oktopus", "Kreide", "Urknall"],
+            ["Silvester", "Seepferdchen", "Wachsmaler", "Paralleluniversum"],
+            ["Karneval", "Fasching", "Fastnacht", "Kostümtag"],
+            ["Valentinstag", "Seestern", "Buntstift", "Wurmloch"],
+            ["Muttertag", "Krabbe", "Filzstift", "Multiversum"],
+            ["Netflix", "Klopapier 2020", "Zoom-Meeting", "Sourdough"],
+            ["Clubhouse", "Toilettenpapier-Hamster", "Home Office", "Bananenbrot"],
+            ["NFT", "Maske", "Teams-Call", "Tiger King"],
+            ["Metaverse", "Desinfektionsmittel", "Mute-Button", "Among Us"],
+            ["ChatGPT", "Impfung", "Webcam", "Squid Game"],
+            ["BeReal", "PCR-Test", "Pyjama-Hose", "Wordle"],
+            ["Threads", "Lockdown", "Zoom-Fatigue", "Dalgona-Kaffee"]
         ];
         
         categories.forEach((quad) => {
@@ -1319,36 +1386,35 @@
             updateScoreDisplay();
             
             // Start first round immediately
-            nextRoundButton.click();
-        });
-        
-        updateTeamInputs();
-        
-        function setTargetArea() {
+                nextRoundButton.click();
+            });
+            
+            
+            function setTargetArea() {
             targetAngle = Math.random() * 360;
             
             const gradient = `conic-gradient(
                 from ${targetAngle - 180}deg at 50% 50%,
                 #a4b0be 0deg,
-                #a4b0be 160deg,
-                #ff6b6b 160deg,
-                #ff6b6b 172deg,
-                #3742fa 172deg,
-                #3742fa 178deg,
-                #FFD700 178deg,
-                #FFD700 182deg,
-                #3742fa 182deg,
-                #3742fa 188deg,
-                #ff6b6b 188deg,
-                #ff6b6b 200deg,
-                #a4b0be 200deg,
+                #a4b0be 155deg,
+                #ff6b6b 155deg,
+                #ff6b6b 170deg,
+                #3742fa 170deg,
+                #3742fa 177.5deg,
+                #FFD700 177.5deg,
+                #FFD700 182.5deg,
+                #3742fa 182.5deg,
+                #3742fa 190deg,
+                #ff6b6b 190deg,
+                #ff6b6b 205deg,
+                #a4b0be 205deg,
                 #a4b0be 360deg
             )`;
             
             targetArea.style.background = gradient;
-        }
-        
-        function setRandomCategories() {
+            }
+            
+            function setRandomCategories() {
             let randomIndex;
             let attempts = 0;
             const maxAttempts = categories.length;
@@ -1381,16 +1447,16 @@
         function calculateScore(angle) {
             const normalizedTarget = normalizeAngle(targetAngle);
             const normalizedNeedle = normalizeAngle(angle);
-            
+                
             let diff = Math.abs(normalizedTarget - normalizedNeedle);
             if (diff > 180) diff = 360 - diff;
-            
-            if (diff <= 2) {
+                
+            if (diff <= 3) { // Gold zone
                 triggerConfetti();
                 return 5;
             }
-            if (diff <= 12) return 3;
-            if (diff <= 35) return 1;
+            if (diff <= 14) return 3;  // Blue zone
+            if (diff <= 38) return 1;  // Red zone
             return 0;
         }
         
