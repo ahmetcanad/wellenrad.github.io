@@ -1,3 +1,5 @@
+<!--Not AhmetCanAd who vibe codes hard here...congrats for reading this line. Take this cookie (◍•ᴗ•◍)❤ 🍪 -->
+
 <!DOCTYPE html>
 <html lang="de">
 
@@ -95,10 +97,6 @@
             position: absolute;
             overflow: hidden;
             transition: opacity 0.3s ease;
-        }
-        
-        .target-area.hidden-for-countdown {
-            opacity: 0;
         }
         
         .needle-container {
@@ -273,32 +271,61 @@
             display: inline-block;
         }
         
-        .countdown-overlay {
+        .round-cover-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
+            background-color: rgba(0, 0, 0, 0.5);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            flex-direction: column;
+            transition: opacity 0.2s ease-out
         }
         
-        .countdown-number {
-            font-family: "Press Start 2P", cursive;
-            font-size: 120px;
+        .round-cover-text {
+            font-family: "Roboto", sans-serif;
+            font-size: 32px;
             color: #ffffff;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
-            animation: pulse 1s ease-in-out;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            margin-bottom: 40px;
+            text-align: center;
+            padding: 0 20px;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); opacity: 1; }
+        .round-cover-button {
+            font-size: 20px;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.05s ease;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            width: auto;
+            height: auto;
+            max-width: 150px;
+            max-height: 100px;
+        }
+        
+        .round-cover-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .round-cover-overlay.show {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
         }
         
         .controls {
@@ -555,9 +582,9 @@
             border-radius: 2px;
             background: linear-gradient(
                 to right,
-                #f46457,
-                hsl(191, 88%, 70%),
-                #ff6bb5
+                #ff5d11,
+                hsl(163, 100%, 50%),
+                #f531c0
             );
         }
         
@@ -708,8 +735,13 @@
                 padding: 6px 12px;
             }
             
-            .countdown-number {
-                font-size: 60px;
+            .round-cover-text {
+                font-size: 24px;
+            }
+            
+            .round-cover-button {
+                font-size: 16px;
+                padding: 12px 30px;
             }
             
             .modal-content {
@@ -825,19 +857,23 @@
 </head>
 
 <body>
-    <div id="countdownOverlay" class="countdown-overlay">
-        <div class="countdown-number" id="countdownNumber"></div>
+    <div id="roundCoverOverlay" class="round-cover-overlay">
+        <div class="round-cover-text">Hinweisperson bitte!</div>
+        <button class="round-cover-button" id="startRoundButton">Bereit!</button>
     </div>
-    
+    <div id="guessCoverOverlay" class="round-cover-overlay">
+    <div class="round-cover-text">Ratende Person bitte</div>
+    <button class="round-cover-button" id="startGuessButton">Bereit!</button>
+    </div>
     <div id="howToPlayModal" class="modal">
         <div class="modal-content">
             <h2>Wie spielt man VibeKreis?</h2>
             <div class="modal-body">
                 <ol>
                     <li>Vier Kategorien werden um den Kreis angezeigt (oben = blau, rechts = rot, unten = grün, links = gelb).</li>
-                    <li>Es gibt zwei Rollen: Eine "Gedankenlesesende Person" und eine "Drehende Person"</li>
-                    <li>Nach einem kurzen Countdown gibt die "Gedankenlesesende Person" einen Hinweis,
-                        wo sich das Ziel im Kreis befindet. Der Hinweis darf die Kategoriewörter nicht benutzen</li>
+                    <li>Es gibt zwei Rollen: Eine "Gedankenlesesende/Hinweisperson Person" und eine "Drehende Person"</li>
+                    <li>Die "Gedankenlesesende Person" sieht zuerst die Kategorien und das Ziel alleine.</li>
+                    <li>Diese Person gibt einen Hinweis, wo sich das Ziel im Kreis befindet. Der Hinweis darf die Kategoriewörter nicht benutzen!</li>
                     <li>Die "Gedankenlesesende Person" klickt auf "Ziel verbergen" und reicht dann weiter.</li>
                     <li>Die andere Person im Team entscheidet, wohin der Zeiger gedreht wird.</li>
                     <li>Die Dreht und zieht den Zeiger, um die Vermutung einzustellen.</li>
@@ -887,7 +923,8 @@
         <div class="count-error-message" id="countErrorMessage"></div>
         <div id="teamNames"></div>
         <div class="error-message" id="errorMessage"></div>
-        <h4>Spielmodus</h4>
+        <h4 class="divider"></h4>
+        <h5>Spielmodus</h5>
         <div class="game-mode-selector">
             <button class="mode-button active" data-mode="endless">Endlos</button>
             <button class="mode-button" data-mode="rounds">5 Runden</button>
@@ -936,14 +973,16 @@
         const newGameButton = document.getElementById("newGameButton");
         const scoreElement = document.getElementById("score");
         const totalScoreElement = document.getElementById("totalScore");
-        const countdownOverlay = document.getElementById("countdownOverlay");
-        const countdownNumber = document.getElementById("countdownNumber");
+        const roundCoverOverlay = document.getElementById("roundCoverOverlay");
+        const startRoundButton = document.getElementById("startRoundButton");
         const errorMessageElement = document.getElementById("errorMessage");
         const countErrorMessageElement = document.getElementById("countErrorMessage");
         const roundCounter = document.getElementById("roundCounter");
         const gameOverModal = document.getElementById("gameOverModal");
         const finalScoresDiv = document.getElementById("finalScores");
-        
+        const guessCoverOverlay = document.getElementById("guessCoverOverlay");
+        const startGuessButton = document.getElementById("startGuessButton");
+
         // Kategorien-Elemente
         const topCategory = document.getElementById("topCategory");
         const rightCategory = document.getElementById("rightCategory");
@@ -1187,7 +1226,7 @@
             ["Mittwoch", "Koala", "Heftgerät", "Blitz"],
             ["Donnerstag", "Panda", "Locher", "Regenbogen"],
             ["Freitag", "Zebra", "Textmarker", "Aurora"],
-            ["Samstag", "Löwe", "Post-it", "Komet"],
+            ["Stift", "Pelican", "Post-it", "Permanent Marker"],
             ["Sonntag", "Tiger", "Tesafilm", "Meteror"],
             ["Januar", "Adler", "Kugelschreiber", "Galaxie"],
             ["Dezember", "Hai", "Füller", "Schwarzes Loch"],
@@ -1235,7 +1274,9 @@
             ["Glühbirne", "Ananas", "Rollschuhe", "Krake"],
             ["Sushi", "Bumerang", "Kühlschrank", "Meerjungfrau"],
             ["Cookie", "Zeitmaschine", "Bleistift", "Zombie"],
-            ["Donut", "Jetpack", "Zahnbürste", "Ninja"]
+            ["Donut", "Jetpack", "Zahnbürste", "Ninja"],
+            ["Soooos", "Sase", "Seees", "Frohes Neues Jahr für dich"],
+            ["Happy End","Freunde+","Solingen","Mark Forster"]
         ];
         
         const teamSetup = document.getElementById('teamSetup');
@@ -1342,32 +1383,40 @@
             }
         }
         
-        function showCountdown(callback) {
-            let count = 3;
-            countdownOverlay.style.display = 'flex';
-            
-            targetArea.classList.add('hidden-for-countdown');
-            
-            const interval = setInterval(() => {
-                if (count > 0) {
-                    countdownNumber.textContent = count;
-                    countdownNumber.style.animation = 'none';
-                    setTimeout(() => {
-                        countdownNumber.style.animation = 'pulse 1s ease-in-out';
-                    }, 10);
-                    count--;
-                } else {
-                    clearInterval(interval);
-                    countdownOverlay.style.display = 'none';
-                    targetArea.classList.remove('hidden-for-countdown');
-                    callback();
-                }
-            }, 1000);
-            
-            countdownNumber.textContent = count;
-            count--;
+        function showRoundCover() {
+            roundCoverOverlay.classList.add('show');
+            roundCoverOverlay.style.display = 'flex';
         }
         
+        function hideRoundCover() {
+            roundCoverOverlay.classList.remove('show');
+            setTimeout(() => {
+                roundCoverOverlay.style.display = 'none';
+            }, 300);
+        }
+        
+        startRoundButton.addEventListener('click', () => {
+            hideRoundCover();
+
+            // Zeige jetzt das Target und die Kategorien
+            targetArea.style.display = "block";
+            isTargetVisible = true;
+            showCategories();
+            toggleButton.style.display = "inline-block";
+            toggleButton.textContent = "Ziel verbergen";
+        });
+        
+        startGuessButton.addEventListener('click', () => {
+            guessCoverOverlay.classList.remove('show');
+            setTimeout(() => {
+                guessCoverOverlay.style.display = 'none';
+            }, 300);
+            // Zeige nur den Toggle-Button und die Nadel
+            toggleButton.style.display = "inline-block";
+            toggleButton.textContent = "Ziel aufdecken";
+            showNeedle();
+            canMoveNeedle = true;
+        });
         function showCategories() {
             topCategory.classList.add('visible');
             rightCategory.classList.add('visible');
@@ -1396,6 +1445,22 @@
             }
             
             const inputs = Array.from(teamNames.children);
+
+            // NEUE ÜBERPRÜFUNG: Prüfe auf leere Felder
+            let hasEmptyFields = false;
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.classList.add('error');
+                    hasEmptyFields = true;
+                }
+            });
+            
+            if (hasEmptyFields) {
+                errorMessageElement.textContent = 'Bitte gib für alle Teams einen Namen ein.';
+                errorMessageElement.classList.add('show');
+                return;
+            }
+
             let hasBannedWords = false;
             
             inputs.forEach(input => {
@@ -1443,7 +1508,7 @@
         });
         
         updateTeamInputs();
-        
+    
         function setTargetArea() {
           targetAngle = Math.random() * 360;
         
@@ -1621,32 +1686,46 @@
         document.addEventListener("touchend", handleEnd);
         
         toggleButton.addEventListener("click", () => {
-            isTargetVisible = !isTargetVisible;
-            targetArea.style.display = isTargetVisible ? "block" : "none";
-            if (!isTargetVisible) {
-                toggleButton.textContent = "Ziel aufdecken";
-                scoreElement.textContent = "";
-                showNeedle();
-                canMoveNeedle = true;
-                nextRoundButton.style.display = "none";  // Hide next round button
-            } else {
+            if (isTargetVisible) {
+                // Verstecke das Ziel
+                isTargetVisible = false;
+                targetArea.style.display = "none";
                 toggleButton.style.display = "none";
+                scoreElement.textContent = "";
+                nextRoundButton.style.display = "none";
+
+                // Verstecke die Kategorien für die ratende Person
+                hideCategories();
+                hideNeedle();  // Verstecke die Nadel auch zuerst
+
+                // Zeige das Cover für die ratende Person
+                guessCoverOverlay.classList.add('show');
+                guessCoverOverlay.style.display = 'flex';
+            } else {
+                // Zeige das Ziel wieder (für Aufdecken)
+                isTargetVisible = true;
+                targetArea.style.display = "block";
+                toggleButton.style.display = "none";
+
+                // Zeige die Kategorien wieder beim Aufdecken
+                showCategories();
+
                 const score = calculateScore(currentNeedleAngle);
                 teams[currentTeamIndex].score += score;
                 scoreElement.textContent = `${teams[currentTeamIndex].name} erzielt: ${score} Punkte`;
                 updateScoreDisplay();
                 canMoveNeedle = false;
-                nextRoundButton.style.display = "inline-block";  // Show next round button after revealing
+                nextRoundButton.style.display = "inline-block";
             }
         });
-        
+
         nextRoundButton.addEventListener("click", () => {
             // Don't increment currentTurn on the very first round
             if (!isFirstRound) {
                 currentTurn++;
             }
             isFirstRound = false;
-            
+
             if (gameMode === 'rounds' && teams.length > 0) {
                 // Check if all teams have played this round
                 if (currentTurn > 0 && currentTurn % teams.length === 0) {
@@ -1658,31 +1737,31 @@
                 }
                 updateRoundCounter();
             }
-            
+
+            // VERSTECKE ALLES ZUERST
             hideCategories();
+            targetArea.style.display = "none";  // Verstecke das Target sofort
+            hideNeedle();
+
+            // Bereite die neue Runde vor
             setTargetArea();
             setRandomCategories();
-            isTargetVisible = true;
-            targetArea.style.display = "block";
-            toggleButton.textContent = "Ziel verbergen";
-            toggleButton.style.display = "inline-block";
             needle.style.transform = "translate(-50%, -100%) rotate(0deg)";
             currentNeedleAngle = 0;
             scoreElement.textContent = "";
-            hideNeedle();
             canMoveNeedle = false;
-            nextRoundButton.style.display = "none";  // Hide next round button for new round
-            
+            toggleButton.style.display = "none";  // Verstecke den Button
+            nextRoundButton.style.display = "none";
+
             if (teams.length > 0) {
                 currentTeamIndex = (currentTeamIndex + 1) % teams.length;
                 updateScoreDisplay();
             }
-            
-            showCountdown(() => {
-                showCategories();
-            });
+
+            // Zeige das Cover
+            showRoundCover();
         });
-        
+
         newGameButton.addEventListener("click", () => {
             const userConfirmed = confirm("Bist du sicher, dass du ein neues Spiel starten möchtest? Alle Punktestände gehen verloren!");
             if (userConfirmed) {
